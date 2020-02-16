@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class CartStore {
   final IOrderRepo orderRepo;
-
+  List cartCounters;
   CartStore(this.orderRepo);
   CartModel cartModel;
 

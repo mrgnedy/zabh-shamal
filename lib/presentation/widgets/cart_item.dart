@@ -3,6 +3,7 @@ import 'package:bots/core/utils.dart';
 import 'package:bots/data/models/cart_model.dart';
 import 'package:bots/presentation/state/cart_store.dart';
 import 'package:bots/presentation/widgets/counter_bar.dart';
+import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,7 @@ import 'package:states_rebuilder/states_rebuilder.dart';
 class CartItem extends StatefulWidget {
   final Data cartItem;
   final int index;
-  CartItem(this.cartItem, this.callback,] this.index);
+  CartItem(this.cartItem, this.index);
   @override
   _CartItemState createState() => _CartItemState();
 }
@@ -41,7 +42,7 @@ class _CartItemState extends State<CartItem> {
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: CounterBar(widget.callback, widget.index),
+            child: CounterBar(widget.index),
           ),
           Align(
             alignment: Alignment.topRight,
@@ -95,18 +96,7 @@ class _CartItemState extends State<CartItem> {
               children: <Widget>[
                 defaultRichTxt('السعر', '${widget.cartItem.totalPrice}'),
                 SizedBox(width: 10),
-                StateBuilder(
-                    models: [Injector.getAsReactive<CartStore>()],
-                    builder: (context, reactiveModel) {
-                      return Txt('تعديل',
-                          style: TxtStyle()
-                            ..background.color(ColorsD.main)
-                            ..width(size.width / 4)
-                            ..height(size.height / 20)
-                            ..borderRadius(all: 16)
-                            ..alignmentContent.center()
-                            ..textColor(Colors.white));
-                    }),
+                editQuantityBtn()
               ],
             ),
           )
@@ -126,24 +116,49 @@ class _CartItemState extends State<CartItem> {
           style: TextStyle(color: Colors.black, fontFamily: 'Cairo')),
     ]));
   }
-  
-  editQuantitiy(){}
+
+  editQuantitiy() {
+    final reactiveModel = Injector.getAsReactive<CartStore>();
+    reactiveModel.setState((state) => state
+        .updateCart(
+            context, state.cartCounters[widget.index], widget.cartItem.id)
+        .then((_) => state.getCart(context)));
+  }
+
   editQuantityBtn() {
+    TxtStyle txtStyle = TxtStyle()
+      ..background.color(ColorsD.main)
+      ..width(StylesD.size.width / 4)
+      ..height(StylesD.size.height / 20)
+      ..borderRadius(all: 16)
+      ..alignmentContent.center()
+      ..textColor(Colors.white);
     final Widget onIdleWidget = Txt(
       'تعديل',
-      style: StylesD.txtOnCardStyle.clone()..width(StylesD.size.width / 4),
-      gesture: Gestures()..onTap(()=>),
+      style: txtStyle,
+      // style: StylesD.txtOnCardStyle.clone()..width(StylesD.size.width / 4),
+      gesture: Gestures()..onTap(() => editQuantitiy()),
     );
-    final reactiveModel = Injector.getAsReactive<CartStore>();
-    reactiveModel.setState((state) => state.updateCart(context,, widget.cartItem.id));
+    final Widget onWaiting = Parent(
+      child: WaitingWidget(),
+      style: StylesD.btnOnCardStyle.clone()..width(StylesD.size.width / 4),
+      gesture: Gestures()..onTap(() => editQuantitiy()),
+    );
+    final Widget onError = Txt(
+      'تعديل',
+      style: StylesD.txtOnCardStyle.clone()
+        ..width(StylesD.size.width / 4)
+        ..background.color(Colors.red),
+      gesture: Gestures()..onTap(() => editQuantitiy()),
+    );
     return StateBuilder<CartStore>(
       models: [Injector.getAsReactive<CartStore>()],
       builder: (context, reactiveModel) {
         return reactiveModel.whenConnectionState(
-          onIdle: null,
-          onWaiting: null,
-          onData: null,
-          onError: null,
+          onIdle: () => onIdleWidget,
+          onWaiting: () => onWaiting,
+          onError: (e) => onError,
+          onData: (_) => onIdleWidget,
         );
       },
     );

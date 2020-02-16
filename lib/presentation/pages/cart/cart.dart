@@ -17,13 +17,16 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  
   @override
   void initState() {
     // TODO: implement initState
 
     final reactiveModel = Injector.getAsReactive<CartStore>();
-    reactiveModel.setState((state) => state.getCart(context));
+    reactiveModel.setState((state) => state.getCart(context).then((data) {
+          state.cartCounters = List.generate(data.data.length,
+              (index) => int.parse(data.data[index].qty.toString()));
+        }));
+    print(countersList);
     super.initState();
   }
 
@@ -32,11 +35,11 @@ class _CartState extends State<Cart> {
   callback(int counter, index) {
     countersList[index] = counter;
     print(countersList);
-    
   }
 
   @override
   Widget build(BuildContext context) {
+    print(countersList);
     return Scaffold(
       body: StateBuilder<CartStore>(
           models: [
@@ -46,7 +49,7 @@ class _CartState extends State<Cart> {
             return reactiveModel.whenConnectionState(
               onIdle: () => IdleWidget(),
               onWaiting: () => WaitingWidget(),
-              onError: (e) => OnErrorWidget(e.toString()),
+              onError: (e) => OnErrorWidget('e'),
               onData: (s) {
                 int totalPrice = 0;
                 s.cartModel.data.forEach((cartItem) {
@@ -56,7 +59,6 @@ class _CartState extends State<Cart> {
                   child: ListView(
                     shrinkWrap: true,
                     children: List.generate(3, (index) {
-                      countersList.add(0);
                       return CartItem(s.cartModel.data[index], index);
                     })
                       ..addAll(

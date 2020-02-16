@@ -22,7 +22,11 @@ class CartRepo implements IOrderRepo {
   @override
   Future<UpdateCartModel> updateCart(context, quantity, id) async {
     String url = APIs.updateCartEP;
-    final response = await APIs.getRequest(context, url);
+    Map<String, dynamic> body ={
+      'order_product': id.toString(),
+      'qty': quantity.toString()
+    };
+    final response = await APIs.postRequest(context, url, body);
     if (response != null) {
       return UpdateCartModel.fromJson(response);
     } else

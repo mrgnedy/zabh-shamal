@@ -3,7 +3,6 @@ import 'package:bots/core/utils.dart';
 import 'package:bots/data/models/banks_model.dart';
 import 'package:bots/presentation/state/account_store.dart';
 import 'package:bots/presentation/widgets/error_widget.dart';
-import 'package:bots/presentation/widgets/error_widget.dart' as prefix0;
 import 'package:bots/presentation/widgets/idle_widget.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
@@ -71,13 +70,15 @@ class _ContactsPageState extends State<ContactsPage> {
               ],
             ),
             SizedBox(width: 10),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                '${APIs.imageBaseUrl}${bank.image}',
-                height: size.height / 8.8,
-                width: size.width / 4.5,
-                fit: BoxFit.cover,
+            Expanded(
+                          child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  '${APIs.imageBaseUrl}${bank.image}',
+                  height: size.height / 8.8,
+                  width: size.width / 4.5,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ],

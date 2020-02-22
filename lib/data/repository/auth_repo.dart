@@ -1,17 +1,16 @@
-import 'dart:convert';
+
 
 import 'package:bots/core/api_utils.dart';
 import 'package:bots/data/models/log_in_model.dart';
 import 'package:bots/data/models/register_model.dart';
 import 'package:bots/domain/repo/auth_repo_inter.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class AuthRepo implements IAuthRepo {
   @override
   Future<LogInModel> login(
       BuildContext context, String phone, String password) async {
-    // TODO: implement login
     final url = APIs.loginEP;
     final Map<String, dynamic> body = {
       'phone': '$phone',
@@ -34,7 +33,6 @@ class AuthRepo implements IAuthRepo {
     String confirmPassword,
     String email,
   ) async {
-    // TODO: implement register
     final url = APIs.registerEP;
     final Map<String, dynamic> body = {
       'name': name,

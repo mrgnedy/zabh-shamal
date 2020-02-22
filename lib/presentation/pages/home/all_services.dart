@@ -1,6 +1,5 @@
 import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
-import 'package:bots/data/models/all_services.dart';
 import 'package:bots/presentation/state/services_store.dart';
 import 'package:bots/presentation/widgets/error_widget.dart';
 import 'package:bots/presentation/widgets/idle_widget.dart';
@@ -20,6 +19,7 @@ class _AllServicesState extends State<AllServices> {
   final reactiveModel = Injector.getAsReactive<AllServicesStore>();
   @override
   void initState() {
+    // if(reactiveModel.state.allServicesModel != null) return;
     reactiveModel.setState((s) => s.getAllServices(context));
     super.initState();
   }
@@ -48,7 +48,7 @@ class _AllServicesState extends State<AllServices> {
           final service = data.allServicesModel.data[index];
 
           return Parent(
-            style: StylesD.cartStyle.clone()..minHeight(size.height / 3),
+            style: StylesD.cartStyle.clone()..width(size.height / 2.6),
             gesture: Gestures()
               ..onTap(() {
                 Router.navigator.pushNamed(Router.allProducts,
@@ -60,13 +60,18 @@ class _AllServicesState extends State<AllServices> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                   Parent(
-                    style: StylesD.cartStyle.clone()
-                      ..padding(all: 0)
-                      ..margin(all: 0)
-                      ..elevation(1, angle: 0.3, color: ColorsD.elevationColor),
-                    child: Image.network(
-                      '${APIs.imageBaseUrl}${data.allServicesModel.data[index].image}',
-                      height: size.height / 4.2,
+                    // style: StylesD.cartStyle.clone()
+                    //   ..padding(all: 0)
+                    //   ..margin(all: 0)
+                    //   ..elevation(1, angle: 0.3, color: ColorsD.elevationColor),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        '${APIs.imageBaseUrl}${data.allServicesModel.data[index].image}',
+                        height: size.height / 4,
+                        width: size.width,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   SizedBox(

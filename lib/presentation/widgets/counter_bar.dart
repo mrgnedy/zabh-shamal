@@ -19,8 +19,6 @@ class _CounterBarState extends State<CounterBar> {
   void initState() {
     reactiveModel = Injector.getAsReactive<CartStore>();
     counter=reactiveModel.state.cartCounters[widget.index];
-    // TODO: implement initState
-    // widget.
     super.initState();
   }
 

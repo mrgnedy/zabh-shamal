@@ -7,9 +7,11 @@ class OnErrorWidget extends StatelessWidget {
   OnErrorWidget([this.errorMsg = 'حدث خطأ في الإتصال', this.callback]);
   @override
   Widget build(BuildContext context) {
-    return Txt(
-      '$errorMsg',
-      gesture: Gestures()..onTap(callback),
+    return Center(
+      child: Txt(
+        '$errorMsg',
+        gesture: Gestures()..onTap(callback),
+      ),
     );
   }
 }

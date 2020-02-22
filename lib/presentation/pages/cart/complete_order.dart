@@ -1,10 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/router.gr.dart';
+import 'package:bots/presentation/state/auth_store.dart';
+import 'package:bots/presentation/state/cart_store.dart';
+import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
+
+import '../../../core/utils.dart';
 
 class OrderPage extends StatefulWidget {
   @override
@@ -17,28 +29,35 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('إتمام الطلب'),
         centerTitle: true,
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
-        child: ListView(
-          padding: EdgeInsets.all(10),
-          children: <Widget>[
-            buildPhone(),
-            SizedBox(height: 30),
-            buildAddress(),
-            SizedBox(height: 30),
-            buildPaymentMethod(),
-            SizedBox(height: 30),
-            completeOrder()
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            // padding: EdgeInsets.all(10),
+            children: <Widget>[
+              buildPhone(),
+              SizedBox(height: 30),
+              buildAddress(),
+              SizedBox(height: 30),
+              buildPaymentMethod(),
+              SizedBox(height: 30),
+              paymentMethod == 0 ? Container() : setImage(),
+              SizedBox(height: 30),
+              completeOrderBtn()
+            ],
+          ),
         ),
       ),
     );
   }
 
+  TextEditingController phoneCtrler = TextEditingController();
   Widget buildPhone() {
     return Row(
       children: <Widget>[
@@ -52,6 +71,8 @@ class _OrderPageState extends State<OrderPage> {
         Expanded(
           flex: 2,
           child: TextField(
+            keyboardType: TextInputType.number,
+            controller: phoneCtrler,
             decoration: InputDecoration(
               errorBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.red, width: 2),
@@ -67,6 +88,9 @@ class _OrderPageState extends State<OrderPage> {
               ),
             ),
           ),
+        ),
+        SizedBox(
+          width: 10,
         ),
         Expanded(
           flex: 1,
@@ -86,6 +110,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   TextEditingController addressCtrler = TextEditingController();
+  List<Address> address;
   Widget buildAddress() {
     return Row(
       children: <Widget>[
@@ -121,14 +146,17 @@ class _OrderPageState extends State<OrderPage> {
           onTap: () async {
             PermissionHandler()
                 .checkPermissionStatus(PermissionGroup.location)
-                .then((perm) {
+                .then((perm) async {
               if (perm == PermissionStatus.disabled)
                 AppSettings.openLocationSettings();
-
+              
               Router.navigator
                   .pushNamed(Router.map, arguments: setPostion)
-                  .then((s) {
-                addressCtrler.text = '${_position.longitude}';
+                  .then((s) async {
+                _position = s;
+                address = await Geocoder.local.findAddressesFromCoordinates(
+                    Coordinates(_position.latitude, _position.longitude));
+                addressCtrler.text = '${address.first.addressLine}';
                 setState(() {});
               });
             });
@@ -144,7 +172,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Position _position;
   setPostion(pos) {
-    _position = pos;
+    // _position = pos;
   }
 
   Widget buildPaymentMethod() {
@@ -199,16 +227,89 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Widget completeOrder() {
-    return Txt('إتمام الطلب',
-        style: TxtStyle()
-          ..fontFamily('Cairo')
-          ..textColor(Colors.white)
-          ..background.color(ColorsD.main)
-          ..margin(all: 10)
-          ..height(50)
-          ..elevation(10, color: ColorsD.elevationColor)
-          ..alignmentContent.center()
-          ..borderRadius(all: 8));
+  File _image;
+  Future<File> pickImage() async {
+    return await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+  }
+
+  Widget setImage() {
+    return Expanded(
+      child: DottedBorder(
+        child: GestureDetector(
+            onTap: () async {
+              _image = await pickImage();
+              setState(() {});
+            },
+            child: _image != null
+                ? Image.file(_image, fit: BoxFit.cover)
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                          child: Icon(
+                        Icons.camera_enhance,
+                        size: 32,
+                      )),
+                      Txt('Add Image')
+                    ],
+                  )),
+        radius: Radius.circular(12),
+        strokeWidth: 3,
+        dashPattern: [6, 6],
+        color: Colors.grey,
+        borderType: BorderType.RRect,
+        strokeCap: StrokeCap.round,
+      ),
+    );
+  }
+
+  completeOrder() {
+    if ((_image == null && paymentMethod==1)||
+        phoneCtrler.text.isEmpty ||
+        addressCtrler.text.isEmpty) {
+      AlertDialogs.failed(context, content: 'من فضلك أكمل البيانات');
+      return;
+    }
+
+    final reactiveModel = Injector.getAsReactive<CartStore>();
+    reactiveModel.setState((state) => state.makeOrder(
+        context,
+        <String, String>{
+          "address": address.first.addressLine,
+          "lat": address.first.coordinates.latitude.toString(),
+          "lng": address.first.coordinates.longitude.toString(),
+          "city": address.first.adminArea,
+          "name": Injector.get<AuthStore>().logInModel.data.name,
+          "phone": phoneCtrler.text,
+          "payment_type": paymentMethod.toString(),
+          "products": json.encode({"products": (state.cartModel.data)}),
+          // "image" : MultipartFile.fromString(_image.readAsStringSync(), 'image.png')
+        },
+        paymentMethod == 1 ? _image.path : null));
+  }
+
+  Widget completeOrderBtn() {
+    Widget onIdleWidget = Txt('إتمام الطلب',
+        style: StylesD.txtOnCardStyle,
+        gesture: Gestures()..onTap(() => completeOrder()));
+    Widget onErrorWidget = Txt('إتمام الطلب',
+        style: StylesD.txtOnCardStyle.clone()..background.color(Colors.red),
+        gesture: Gestures()..onTap(() => completeOrder()));
+    Widget onWaitingWidget = Parent(
+      child: WaitingWidget(),
+    );
+    return StateBuilder<CartStore>(
+        models: [Injector.getAsReactive<CartStore>()],
+        builder: (context, reactiveModel) => reactiveModel.whenConnectionState(
+              onIdle: () => onIdleWidget,
+              onWaiting: () => onWaitingWidget,
+              onError: (e) {
+                print(e);
+                return onErrorWidget;
+              },
+              onData: (_) => onIdleWidget,
+            ));
   }
 }

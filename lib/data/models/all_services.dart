@@ -1,15 +1,15 @@
 class AllServicesModel {
   String msg;
-  List<Data> data;
+  List<Service> data;
 
   AllServicesModel({this.msg, this.data});
 
   AllServicesModel.fromJson(Map<String, dynamic> json) {
     msg = json['msg'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<Service>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new Service.fromJson(v));
       });
     }
   }
@@ -24,7 +24,7 @@ class AllServicesModel {
   }
 }
 
-class Data {
+class Service {
   int id;
   String name;
   String image;
@@ -32,7 +32,7 @@ class Data {
   String updatedAt;
   List<Product> product;
 
-  Data(
+  Service(
       {this.id,
       this.name,
       this.image,
@@ -40,7 +40,7 @@ class Data {
       this.updatedAt,
       this.product});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Service.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     image = json['image'];

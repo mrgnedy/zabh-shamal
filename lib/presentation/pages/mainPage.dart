@@ -1,14 +1,10 @@
-import 'dart:convert';
 
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/pages/account/my_account.dart';
 import 'package:bots/presentation/pages/cart/cart.dart';
 import 'package:bots/presentation/pages/contacts/contacts.dart';
-import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/widgets/main_page_drawer.dart';
 import 'package:bots/presentation/widgets/navigationBar.dart';
-import 'package:division/division.dart';
-import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -107,7 +103,7 @@ class _MainPageState extends State<MainPage> {
 
   Widget buildWhats() {
     String whatsNumber =
-        "https://api.whatsapp.com/send?phone=${Urls.phoneNumber}&text=${utf8.encode('السلام عليكم')}";
+        "https://api.whatsapp.com/send?phone=${Urls.phoneNumber}&text=${('السلام عليكم')}";
     return GestureDetector(
       onTap: () => phoneCall(whatsNumber),
       child: Icon(

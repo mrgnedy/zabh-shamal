@@ -3,17 +3,13 @@ import 'package:bots/data/repository/account_repo.dart';
 import 'package:bots/data/repository/auth_repo.dart';
 import 'package:bots/data/repository/cart_repo.dart';
 import 'package:bots/data/repository/products_repo.dart';
-import 'package:bots/domain/repo/account_repo_inter.dart';
 import 'package:bots/presentation/pages/mainPage.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/account_store.dart';
 import 'package:bots/presentation/state/auth_store.dart';
 import 'package:bots/presentation/state/cart_store.dart';
 import 'package:bots/presentation/state/services_store.dart';
-import 'package:division/division.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogflow/dialogflow_v2.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 void main() {

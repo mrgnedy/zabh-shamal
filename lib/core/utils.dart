@@ -10,21 +10,35 @@ class ColorsD {
 
 class StylesD {
   static Size size;
+  static InputDecoration inputDecoration = InputDecoration(
+    errorBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.red, width: 2),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: ColorsD.main, width: 2),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: ColorsD.main, width: 2),
+      borderRadius: BorderRadius.circular(8),
+    ),
+  );
   static TxtStyle txtOnCardStyle = TxtStyle()
     ..fontFamily('Cairo')
     ..textColor(Colors.white)
     ..alignment.center()
     ..alignmentContent.center()
     ..borderRadius(all: 8)
-    ..height(size.height/18)
+    ..height(size.height / 18)
     ..background.color(ColorsD.main)
     ..elevation(10, color: ColorsD.elevationColor)
-    ..margin(horizontal: 20,bottom: 10);
+    ..margin(horizontal: 20, bottom: 10);
   static ParentStyle btnOnCardStyle = ParentStyle()
     ..alignment.center()
     ..alignmentContent.center()
     ..borderRadius(all: 8)
-    ..height(size.height/18)
+    ..height(size.height / 18)
     ..background.color(ColorsD.main)
     ..elevation(10, color: ColorsD.elevationColor)
     ..margin(horizontal: 20, vertical: 20);
@@ -36,8 +50,6 @@ class StylesD {
     ..padding(all: 20.0)
     ..background.color(Colors.white)
     ..margin(all: 20);
-  
-  
 
   static TxtStyle txtStyle = TxtStyle()..fontFamily('Cairo');
 }

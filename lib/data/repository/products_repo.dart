@@ -1,14 +1,13 @@
 import 'package:bots/core/api_utils.dart';
 import 'package:bots/data/models/all_services.dart';
 import 'package:bots/data/models/offers_model.dart';
+import 'package:bots/data/models/pack_shred_model.dart';
 import 'package:bots/domain/repo/products_repo_inter.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 
 class ProductsRepo implements IProductsRepo {
   @override
   Future<OffersModel> getAllOffers(context) async {
-    // TODO: implement getAllOffers
     String url = APIs.getoffersEP;
     final response = await APIs.getRequest(context, url);
     if (response != null)
@@ -27,5 +26,15 @@ class ProductsRepo implements IProductsRepo {
       return AllServicesModel.fromJson(response);
     else
       throw Exception('لا توجد خدمات متاحة');
+  }
+
+  @override
+  Future<PackNShredModel> getAllPackages() async {
+    BuildContext context;
+    String url = APIs.packNShredEP;
+    final response = await APIs.getRequest(context, url);
+    if(response != null) return PackNShredModel.fromJson(response);
+    throw Exception();
+    
   }
 }

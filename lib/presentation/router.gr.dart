@@ -19,6 +19,11 @@ import 'package:bots/presentation/pages/contacts/contacts.dart';
 import 'package:bots/presentation/pages/account/orders.dart';
 import 'package:bots/presentation/pages/auth/map.dart';
 import 'package:bots/presentation/pages/drawer/offers_new.dart';
+import 'package:bots/presentation/pages/account/empty_page.dart';
+import 'package:bots/presentation/pages/account/contactUs_page.dart';
+import 'package:bots/presentation/pages/account/order_products.dart';
+import 'package:bots/data/models/my_orders_model.dart';
+import 'package:bots/presentation/pages/drawer/how_shopping.dart';
 
 class Router {
   static const mainPage = '/';
@@ -32,6 +37,10 @@ class Router {
   static const orders = '/orders';
   static const map = '/map';
   static const offersPage = '/offers-page';
+  static const emptyPage = '/empty-page';
+  static const contactUsPage = '/contact-us-page';
+  static const orderProductcsPage = '/order-productcs-page';
+  static const howShopping = '/how-shopping';
   static GlobalKey<NavigatorState> get navigatorKey =>
       getNavigatorKey<Router>();
   static NavigatorState get navigator => navigatorKey.currentState;
@@ -61,9 +70,10 @@ class Router {
           settings: settings,
         );
       case Router.authPage:
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => AuthPage(),
           settings: settings,
+          maintainState: false,
         );
       case Router.createAccount:
         return MaterialPageRoute(
@@ -91,7 +101,7 @@ class Router {
         );
       case Router.orders:
         return MaterialPageRoute(
-          builder: (_) => Orders(),
+          builder: (_) => OrdersPage(),
           settings: settings,
         );
       case Router.map:
@@ -106,6 +116,41 @@ class Router {
       case Router.offersPage:
         return MaterialPageRoute(
           builder: (_) => OffersPage(),
+          settings: settings,
+        );
+      case Router.emptyPage:
+        if (hasInvalidArgs<EmptyPageArguments>(args)) {
+          return misTypedArgsRoute<EmptyPageArguments>(args);
+        }
+        final typedArgs = args as EmptyPageArguments ?? EmptyPageArguments();
+        return MaterialPageRoute(
+          builder: (_) => EmptyPage(
+              key: typedArgs.key,
+              title: typedArgs.title,
+              content: typedArgs.content),
+          settings: settings,
+        );
+      case Router.contactUsPage:
+        return MaterialPageRoute(
+          builder: (_) => ContactUsPage(),
+          settings: settings,
+        );
+      case Router.orderProductcsPage:
+        if (hasInvalidArgs<OrderProductcsPageArguments>(args)) {
+          return misTypedArgsRoute<OrderProductcsPageArguments>(args);
+        }
+        final typedArgs = args as OrderProductcsPageArguments ??
+            OrderProductcsPageArguments();
+        return MaterialPageRoute(
+          builder: (_) => OrderProductcsPage(
+              key: typedArgs.key,
+              title: typedArgs.title,
+              products: typedArgs.products),
+          settings: settings,
+        );
+      case Router.howShopping:
+        return MaterialPageRoute(
+          builder: (_) => HowShopping(),
           settings: settings,
         );
       default:
@@ -123,4 +168,20 @@ class AllProductsArguments {
   final String title;
   final List<Product> products;
   AllProductsArguments({this.title = 'h', this.products});
+}
+
+//EmptyPage arguments holder class
+class EmptyPageArguments {
+  final Key key;
+  final String title;
+  final String content;
+  EmptyPageArguments({this.key, this.title, this.content});
+}
+
+//OrderProductcsPage arguments holder class
+class OrderProductcsPageArguments {
+  final Key key;
+  final String title;
+  final List<OrderProducts> products;
+  OrderProductcsPageArguments({this.key, this.title, this.products});
 }

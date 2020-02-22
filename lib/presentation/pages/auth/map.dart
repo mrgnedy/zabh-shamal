@@ -18,7 +18,7 @@ class _MapState extends State<Map> {
   checkPermission() async {
     geolocator.checkGeolocationPermissionStatus().then((geoStatus) {
       if (geoStatus == GeolocationStatus.denied)
-        PermissionHandler().requestPermissions([PermissionGroup.location]);
+        PermissionHandler().requestPermissions([PermissionGroup.location]).then((_)=>getCurrentLocation());
       else
         getCurrentLocation();
     });
@@ -26,7 +26,6 @@ class _MapState extends State<Map> {
 
   @override
   void initState() {
-    // TODO: implement initState
     // checkPermission();
     super.initState();
   }
@@ -35,7 +34,9 @@ class _MapState extends State<Map> {
   Widget build(BuildContext context) {
     return Container(  
       child: Scaffold(
+        
         appBar: AppBar(
+          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: ()=>Router.navigator.pop(currentPos)),
           actions: <Widget>[
             IconButton(
                 icon: Icon(Icons.my_location),
@@ -43,6 +44,7 @@ class _MapState extends State<Map> {
           ],
         ),
         body: GoogleMap(
+          
           onTap: (s) {
             currentPos = Position(longitude: s.longitude, latitude: s.latitude);
             marker = Set.from([

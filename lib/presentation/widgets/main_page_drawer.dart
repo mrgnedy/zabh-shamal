@@ -1,3 +1,4 @@
+import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:division/division.dart';
@@ -48,50 +49,38 @@ class MainPageDrawer extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Txt(
-                            'انشاء حساب/تسجيل الدخول',
-                            gesture: Gestures()
-                              ..onTap(() =>
-                                  Router.navigator.pushNamed(Router.authPage)),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(Icons.share, color: ColorsD.main),
-                        ]),
-                    SizedBox(
-                      height: 10,
+
+                    // Row(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: <Widget>[
+                    //       Txt(
+                    //         'مشاركة التطبيق',
+                    //         gesture: Gestures()
+                    //           ..onTap(() {
+                    //             Share.share('SHARE TEST');
+                    //           }),
+                    //       ),
+                    //       SizedBox(
+                    //         width: 10,
+                    //       ),
+                    //       Icon(Icons.person, color: ColorsD.main),
+                    //     ]),
+                    // SizedBox(
+                    //   height: 10,
+                    // ),
+                    GestureDetector(
+                      onTap: ()=>Router.navigator.pushNamed(Router.howShopping),
+
+                                          child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Txt('طريقة الطلب'),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(Icons.style, color: ColorsD.main),
+                          ]),
                     ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Txt(
-                            'مشاركة التطبيق',
-                            gesture: Gestures()
-                              ..onTap(() {
-                                Share.share('SHARE TEST');
-                              }),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(Icons.person, color: ColorsD.main),
-                        ]),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Txt('طريقة الطلب'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(Icons.style, color: ColorsD.main),
-                        ]),
                     SizedBox(
                       height: 10,
                     ),
@@ -110,6 +99,29 @@ class MainPageDrawer extends StatelessWidget {
                           ),
                           Icon(Icons.ac_unit, color: ColorsD.main),
                         ]),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: APIs.token == null,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Txt(
+                              'انشاء حساب/تسجيل الدخول',
+                              gesture: Gestures()
+                                ..onTap(() => Router.navigator
+                                    .pushNamed(Router.authPage)),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(Icons.share, color: ColorsD.main),
+                          ]),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
               ),

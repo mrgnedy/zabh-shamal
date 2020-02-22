@@ -1,7 +1,5 @@
 import 'package:bots/core/utils.dart';
-import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/auth_store.dart';
-import 'package:bots/presentation/widgets/idle_widget.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +32,7 @@ class _CreateAccountState extends State<CreateAccount> {
   GlobalKey<FormState> formKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -216,19 +214,19 @@ class _CreateAccountState extends State<CreateAccount> {
           print(e.toString());
           return onErrorWidget;},
         onData: (data) {
-          Router.navigator.pop();
-          return Container();
+          // Router.navigator.pop();
+          return onIdleWidget;
         },
       ),
     );
   }
 
   register() {
-    // if (!formKey.currentState.validate()) {
-    //   AlertDialogs.failed(context, content: 'من فضلك أكمل البيانات');
-    //   return;
-    // }
-    // print('sds');
+    if (!formKey.currentState.validate()) {
+      AlertDialogs.failed(context, content: 'من فضلك أكمل البيانات');
+      return;
+    }
+    print('sds');
     final reactiveModel = Injector.getAsReactive<AuthStore>();
     reactiveModel.setState((state) => state.register(
         context,

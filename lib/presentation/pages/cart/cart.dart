@@ -7,7 +7,6 @@ import 'package:bots/presentation/widgets/idle_widget.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -19,9 +18,9 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   void initState() {
-    // TODO: implement initState
 
     final reactiveModel = Injector.getAsReactive<CartStore>();
+    // if(reactiveModel.state.cartModel != null) return;
     reactiveModel.setState((state) => state.getCart(context).then((data) {
           state.cartCounters = List.generate(data.data.length,
               (index) => int.parse(data.data[index].qty.toString()));
@@ -49,7 +48,7 @@ class _CartState extends State<Cart> {
             return reactiveModel.whenConnectionState(
               onIdle: () => IdleWidget(),
               onWaiting: () => WaitingWidget(),
-              onError: (e) => OnErrorWidget('e'),
+              onError: (e) => OnErrorWidget(e.toString()),
               onData: (s) {
                 int totalPrice = 0;
                 s.cartModel.data.forEach((cartItem) {
@@ -58,7 +57,7 @@ class _CartState extends State<Cart> {
                 return Parent(
                   child: ListView(
                     shrinkWrap: true,
-                    children: List.generate(3, (index) {
+                    children: List.generate(s.cartModel.data.length, (index) {
                       return CartItem(s.cartModel.data[index], index);
                     })
                       ..addAll(
@@ -76,7 +75,7 @@ class _CartState extends State<Cart> {
   }
 
   Widget buildTotalPrice(int totalPrice) {
-    return Txt('المجموع: $totalPrice',
+    return Txt('المجموع: $totalPrice ر.س',
         style: StylesD.txtOnCardStyle.clone()
           ..background.color(ColorsD.main.withAlpha(180)));
   }
@@ -97,5 +96,4 @@ class _CartState extends State<Cart> {
     );
   }
 
-  Widget cartItem() {}
 }

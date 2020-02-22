@@ -1,7 +1,9 @@
 import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
+import 'package:bots/data/models/all_services.dart';
 import 'package:bots/data/models/cart_model.dart';
 import 'package:bots/presentation/state/cart_store.dart';
+import 'package:bots/presentation/state/services_store.dart';
 import 'package:bots/presentation/widgets/counter_bar.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
@@ -10,18 +12,24 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class CartItem extends StatefulWidget {
-  final Data cartItem;
+  final CartItemModel cartItem;
   final int index;
   CartItem(this.cartItem, this.index);
   @override
   _CartItemState createState() => _CartItemState();
 }
 
+String service;
+String package;
+String shred;
+
 class _CartItemState extends State<CartItem> {
   @override
   void initState() {
-    // TODO: implement initState
-
+    final reactiveModel = Injector.getAsReactive<AllServicesStore>();
+    service = reactiveModel.state.services.singleWhere((serv)=>serv.id == widget.cartItem.orderService).name;
+    shred = reactiveModel.state.shreds.singleWhere((serv)=>serv.id == widget.cartItem.shudderId).name;
+    package = reactiveModel.state.packages.singleWhere((serv)=>serv.id == widget.cartItem.packageId).name;
     super.initState();
   }
 
@@ -33,17 +41,8 @@ class _CartItemState extends State<CartItem> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: Icon(
-              FontAwesomeIcons.trashAlt,
-              color: Colors.red,
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: CounterBar(widget.index),
-          ),
+          buildDelete(),
+          buildCounter(),
           Align(
             alignment: Alignment.topRight,
             child: Row(
@@ -56,9 +55,9 @@ class _CartItemState extends State<CartItem> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    defaultRichTxt('النوع', '${widget.cartItem.sername}'),
+                    defaultRichTxt('النوع', '$service'),
                     // SizedBox(height: 10),
-                    defaultRichTxt('التقطيع', '${widget.cartItem.shudder}'),
+                    defaultRichTxt('التقطيع', '$shred'),
                     // SizedBox(height: 10),
                     Container(
                       width: size.width / 2,
@@ -68,7 +67,7 @@ class _CartItemState extends State<CartItem> {
                         children: <Widget>[
                           defaultRichTxt('مفروم', 'لا'),
                           defaultRichTxt(
-                              'التجهيز', '${widget.cartItem.package}'),
+                              'التجهيز', '$package'),
                         ],
                       ),
                     ),
@@ -94,7 +93,7 @@ class _CartItemState extends State<CartItem> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                defaultRichTxt('السعر', '${widget.cartItem.totalPrice}'),
+                defaultRichTxt('السعر', '${widget.cartItem.totalPrice} ر.س'),
                 SizedBox(width: 10),
                 editQuantityBtn()
               ],
@@ -102,6 +101,35 @@ class _CartItemState extends State<CartItem> {
           )
         ],
       ),
+    );
+  }
+
+  Widget buildDelete() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: GestureDetector(
+        onTap: () {
+          final reactiveModel = Injector.getAsReactive<CartStore>();
+          reactiveModel.setState((state) => state
+                  .deleteOrder(context, widget.cartItem.id.toString())
+                  .then((_) => state.getCart(context))
+                  .then((data) {
+                state.cartCounters = List.generate(data.data.length,
+                    (index) => int.parse(data.data[index].qty.toString()));
+              }));
+        },
+        child: Icon(
+          FontAwesomeIcons.trashAlt,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  Widget buildCounter() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: CounterBar(widget.index),
     );
   }
 
@@ -120,9 +148,13 @@ class _CartItemState extends State<CartItem> {
   editQuantitiy() {
     final reactiveModel = Injector.getAsReactive<CartStore>();
     reactiveModel.setState((state) => state
-        .updateCart(
-            context, state.cartCounters[widget.index], widget.cartItem.id)
-        .then((_) => state.getCart(context)));
+            .updateCart(
+                context, state.cartCounters[widget.index], widget.cartItem.id)
+            .then((_) => state.getCart(context))
+            .then((data) {
+          state.cartCounters = List.generate(data.data.length,
+              (index) => int.parse(data.data[index].qty.toString()));
+        }));
   }
 
   editQuantityBtn() {

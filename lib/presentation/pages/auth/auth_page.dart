@@ -1,7 +1,7 @@
+import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/auth_store.dart';
-import 'package:bots/presentation/widgets/idle_widget.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +17,15 @@ class _AuthPageState extends State<AuthPage> {
   TextEditingController phoneCtrler = TextEditingController();
   TextEditingController passwordCtrler = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
+
+  @override
+  void initState() {
+    if(APIs.token != null) Navigator.pop(context);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -77,7 +83,9 @@ class _AuthPageState extends State<AuthPage> {
     Size size = MediaQuery.of(context).size;
     Widget onErrorChild = Txt(
       'من فضلك أعد المحاولة',
-      style: StylesD.txtOnCardStyle.clone()..background.color(Colors.redAccent)..height(size.height/18),
+      style: StylesD.txtOnCardStyle.clone()
+        ..background.color(Colors.redAccent)
+        ..height(size.height / 18),
       gesture: Gestures()..onTap(() => login()),
     );
     Widget onWaitingChild = Parent(
@@ -86,7 +94,7 @@ class _AuthPageState extends State<AuthPage> {
     );
     Widget onIdleChild = Txt(
       'تسجيل الدخول',
-      style: StylesD.txtOnCardStyle.clone()..height(size.height/18),
+      style: StylesD.txtOnCardStyle.clone()..height(size.height / 18),
       gesture: Gestures()..onTap(() => login()),
     );
     return StateBuilder(
@@ -96,8 +104,7 @@ class _AuthPageState extends State<AuthPage> {
         onWaiting: () => onWaitingChild,
         onError: (e) => onErrorChild,
         onData: (data) {
-          Router.navigator.pop();
-          return Container();
+          return onIdleChild;
         },
       ),
     );

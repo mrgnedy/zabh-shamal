@@ -20,9 +20,10 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   void initState() {
-    if(APIs.token != null) Navigator.pop(context);
+    if (APIs.token != null) Navigator.pop(context);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
@@ -90,7 +91,7 @@ class _AuthPageState extends State<AuthPage> {
     );
     Widget onWaitingChild = Parent(
       child: WaitingWidget(),
-      style: StylesD.btnOnCardStyle,
+      style: StylesD.cartStyle,
     );
     Widget onIdleChild = Txt(
       'تسجيل الدخول',
@@ -148,8 +149,14 @@ class _AuthPageState extends State<AuthPage> {
 
       return;
     }
-    await reactiveModel.setState(
-        (state) => state.login(context, phoneCtrler.text, passwordCtrler.text));
+    await reactiveModel.setState((state) => state
+            .login(context, phoneCtrler.text, passwordCtrler.text)
+            .then((data) {
+          AlertDialogs.success(context, content: 'تم تسجيل دخولك بنجاح')
+              .then((_) {
+            Navigator.pop(context);
+          });
+        }));
   }
 
   Widget buildPasswordTF() {

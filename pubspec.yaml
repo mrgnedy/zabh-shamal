@@ -19,7 +19,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_dialogflow: any
   states_rebuilder: 
   auto_route: any
   font_awesome_flutter: any
@@ -36,12 +35,11 @@ dependencies:
   permission_handler: any
   app_settings: any
   http: any
-  dartz: any
   shared_preferences: any
-  dio: any
   dotted_border: any
   image_picker: any
   geocoder: any
+  flutter_spinkit: any
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,6 +50,12 @@ dev_dependencies:
     sdk: flutter
   auto_route_generator: any
   build_runner: any
+  flutter_launcher_icons: "^0.7.3"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/icons/3.0x/84273958_467844620576269_2633456491713003520_n.png
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

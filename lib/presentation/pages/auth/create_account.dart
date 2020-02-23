@@ -75,9 +75,8 @@ class _CreateAccountState extends State<CreateAccount> {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         // textAlign: TextAlign.right,
-        validator: (s){
-          if(s.length !=9 && s.length !=10)
-          return "من فضلك ادخل رقم صحيح";
+        validator: (s) {
+          if (s.length != 9 && s.length != 10) return "من فضلك ادخل رقم صحيح";
         },
         controller: phoneCtrler,
         style: TextStyle(color: Colors.black),
@@ -176,9 +175,8 @@ class _CreateAccountState extends State<CreateAccount> {
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         controller: emailCtrler,
-        validator: (s){
-          if(s == null || s.isEmpty)
-          return "هذا الحقل مطلوب";
+        validator: (s) {
+          if (s == null || s.isEmpty) return "هذا الحقل مطلوب";
         },
         textAlign: TextAlign.right,
         style: TextStyle(color: Colors.black),
@@ -210,9 +208,10 @@ class _CreateAccountState extends State<CreateAccount> {
       builder: (context, reactiveModel) => reactiveModel.whenConnectionState(
         onIdle: () => onIdleWidget,
         onWaiting: () => onWaitingWidget,
-        onError: (e)  {
+        onError: (e) {
           print(e.toString());
-          return onErrorWidget;},
+          return onErrorWidget;
+        },
         onData: (data) {
           // Router.navigator.pop();
           return onIdleWidget;
@@ -228,12 +227,15 @@ class _CreateAccountState extends State<CreateAccount> {
     }
     print('sds');
     final reactiveModel = Injector.getAsReactive<AuthStore>();
-    reactiveModel.setState((state) => state.register(
-        context,
-        nameCtrler.text,
-        phoneCtrler.text,
-        passwordCtrler.text,
-        passwordCtrler.text,
-        emailCtrler.text));
+    reactiveModel.setState((state) => state
+            .register(context, nameCtrler.text, phoneCtrler.text,
+                passwordCtrler.text, passwordCtrler.text, emailCtrler.text)
+            .then((data) {
+          if (data != null)
+            AlertDialogs.success(context, content: 'تم انشاء حسابك بنجاح')
+                .then((_) {
+              Navigator.pop(context);
+            });
+        }));
   }
 }

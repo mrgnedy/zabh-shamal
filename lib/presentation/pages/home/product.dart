@@ -3,12 +3,14 @@ import 'package:bots/core/utils.dart';
 import 'package:bots/data/models/all_services.dart';
 import 'package:bots/data/models/pack_shred_model.dart';
 import 'package:bots/data/models/product_model.dart';
+import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/cart_store.dart';
 import 'package:bots/presentation/state/services_store.dart';
 import 'package:bots/presentation/widgets/main_page_drawer.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
@@ -51,9 +53,11 @@ class _ProductPageState extends State<ProductPage>
     super.initState();
   }
 
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       endDrawer: MainPageDrawer(),
       appBar: AppBar(
         title: Txt('تفاصيل المنتج'),
@@ -63,18 +67,21 @@ class _ProductPageState extends State<ProductPage>
         shrinkWrap: true,
         children: []..addAll([
             productGallery(),
-            TabBar(
-                unselectedLabelColor: ColorsD.main,
-                labelStyle: TextStyle(fontFamily: 'Cairo', fontSize: 18),
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: ColorsD.main,
-                ),
-                controller: tabController,
-                tabs: [
-                  Tab(child: Txt('مطعم')),
-                  Tab(child: Txt('منزل')),
-                ]),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TabBar(
+                  unselectedLabelColor: ColorsD.main,
+                  labelStyle: TextStyle(fontFamily: 'Cairo', fontSize: 18),
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: ColorsD.main,
+                  ),
+                  controller: tabController,
+                  tabs: [
+                    Tab(child: Txt('مطعم')),
+                    Tab(child: Txt('منزل')),
+                  ]),
+            ),
             buildPrice(widget.product.price.toString(),
                 widget.product.priceAfteroffer.toString(), widget.product.type),
             builCard('  الرقم', '${widget.product.id}'),
@@ -86,16 +93,28 @@ class _ProductPageState extends State<ProductPage>
             // buildHead('الرأس', services),
 
             buildArrivalTime(),
-            buildRestName(),
             buildQuantitiy(),
             buildShaloota(),
+            buildRestName(),
             buildNotes(),
             Row(
               children: <Widget>[
                 Expanded(child: addToCartBtn()),
                 Expanded(
-                  child:
-                      Txt('الذهاب الي العربة', style: StylesD.txtOnCardStyle),
+                  child: Parent(
+                    style: StylesD.btnOnCardStyle,
+                                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      children: <Widget>[
+                        Txt('الذهاب الي العربة',
+                            gesture: Gestures()
+                              ..onTap(() => Router.navigator.pushNamed(Router.cart))),
+                        SizedBox(width: 10,),
+                        Icon(Icons.shopping_cart, color: Colors.white,),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
@@ -107,7 +126,16 @@ class _ProductPageState extends State<ProductPage>
   addToCart(ProductModel product) {
     print('Adding to cart..');
     final reactiveModel = Injector.getAsReactive<CartStore>();
-    reactiveModel.setState((state) => state.addToCart(context, product));
+    reactiveModel
+        .setState((state) => state.addToCart(context, product).then((data) {
+              if (data != null)
+                _scaffoldKey.currentState.showSnackBar(SnackBar(
+                  content: Txt('تم الاضافة للعربة'),
+                  duration: Duration(milliseconds: 700),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ));
+            }));
   }
 
   controllerListner() {
@@ -139,7 +167,7 @@ class _ProductPageState extends State<ProductPage>
                   orElse: () => packages.first)
               .id
           ..qty = counter
-          ..resturant = ' '
+          ..resturant = '${restCtrler.text}'
           ..shudderId = services
               .singleWhere((serv) => serv.name == dropDownValues['الخدمة'],
                   orElse: () => packages.first)
@@ -222,28 +250,26 @@ class _ProductPageState extends State<ProductPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
-                                          child: Txt(
-                        'بدلا من $price',
-                        style: StylesD.txtStyle.clone()
-                          ..textColor(Colors.red)
-                          ..textDirection(TextDirection.rtl)..alignmentContent.centerLeft()
-                      ),
+                      child: Txt('بدلا من $price',
+                          style: StylesD.txtStyle.clone()
+                            ..textColor(Colors.red)
+                            ..textDirection(TextDirection.rtl)
+                            ..alignmentContent.centerLeft()),
                     ),
-
                     Expanded(
-                      child: Txt(
-                        '$priceAfter',
-                        style: StylesD.txtStyle.clone()
-                          ..textColor(ColorsD.main)
-                          ..textDirection(TextDirection.rtl)..alignment.center()
-                      ),
+                      child: Txt('$priceAfter',
+                          style: StylesD.txtStyle.clone()
+                            ..textColor(ColorsD.main)
+                            ..textDirection(TextDirection.rtl)
+                            ..alignment.center()),
                     ),
-                    SizedBox(width: 25,),
+                    SizedBox(
+                      width: 25,
+                    ),
                     Expanded(
-                                          child: Txt(
-                        '  السعر',
-                        style: StylesD.txtStyle.clone()..alignment.centerRight()
-                      ),
+                      child: Txt('  السعر',
+                          style: StylesD.txtStyle.clone()
+                            ..alignment.centerRight()),
                     ),
                   ],
                 )),

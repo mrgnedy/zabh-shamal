@@ -27,6 +27,13 @@ class _OrderPageState extends State<OrderPage> {
   TextEditingController countryCode = TextEditingController(text: '+966');
   int paymentMethod = 0;
   @override
+  void initState() {
+    // TODO: implement initState
+    final reactiveModel = Injector.getAsReactive<AuthStore>();
+    phoneCtrler.text = reactiveModel.state.logInModel.data.phone;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -124,6 +131,7 @@ class _OrderPageState extends State<OrderPage> {
         Expanded(
           flex: 2,
           child: TextField(
+            maxLines: 3,
             controller: addressCtrler,
             decoration: InputDecoration(
               errorBorder: OutlineInputBorder(
@@ -287,7 +295,9 @@ class _OrderPageState extends State<OrderPage> {
           "products": json.encode({"products": (state.cartModel.data)}),
           // "image" : MultipartFile.fromString(_image.readAsStringSync(), 'image.png')
         },
-        paymentMethod == 1 ? _image.path : null));
+        paymentMethod == 1 ? _image.path : null).then((data){
+          if(data != null) AlertDialogs.success(context, content: 'تم اضافة طلبك بنجاح');
+        }));
   }
 
   Widget completeOrderBtn() {

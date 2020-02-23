@@ -36,6 +36,7 @@ class CartStore {
     print(res.stream.listen((onData) {
       print("this is response ${utf8.decode(onData)}");
     }));
+    return res;
   }
 
   Future deleteOrder(BuildContext context, orderID) async {

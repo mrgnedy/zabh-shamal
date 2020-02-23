@@ -31,6 +31,7 @@ class $Router {
   OrderPage orderPage;
   ContactsPage contactsPage;
   OrdersPage orders;
+  @CupertinoRoute(fullscreenDialog: true)
   Map map;
   OffersPage offersPage;
   EmptyPage emptyPage;

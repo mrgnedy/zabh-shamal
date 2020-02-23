@@ -32,7 +32,7 @@ class _AllServicesState extends State<AllServices> {
           return reactiveModel.whenConnectionState(
             onIdle: () => IdleWidget(),
             onWaiting: () => WaitingWidget(),
-            onError: (e) => OnErrorWidget(e.toString()),
+            onError: (e) => OnErrorWidget("تعذر الاتصال"),
             onData: (data) => _buildServices(data),
           );
         });

@@ -44,7 +44,7 @@ class _AccountPageState extends State<AccountPage> {
         builder: (context, reactiveModel) => reactiveModel.whenConnectionState(
               onIdle: () => IdleWidget(),
               onWaiting: () => WaitingWidget(),
-              onError: (e) => OnErrorWidget(e),
+              onError: (e) => OnErrorWidget("تعذر الاتصال"),
               onData: (data) => accountWidget(data.infoModel.data),
             ));
   }

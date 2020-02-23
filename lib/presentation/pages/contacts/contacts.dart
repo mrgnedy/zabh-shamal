@@ -30,7 +30,7 @@ class _ContactsPageState extends State<ContactsPage> {
           return reactiveModel.whenConnectionState(
             onIdle: () => IdleWidget(),
             onWaiting: () => WaitingWidget(),
-            onError: (e) => OnErrorWidget(e.toString()),
+            onError: (e) => OnErrorWidget("تعذر الاتصال"),
             onData: (data) => onDataWidget(data.banksModel.data),
           );
         });

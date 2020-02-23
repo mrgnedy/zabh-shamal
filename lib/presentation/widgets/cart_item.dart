@@ -27,9 +27,15 @@ class _CartItemState extends State<CartItem> {
   @override
   void initState() {
     final reactiveModel = Injector.getAsReactive<AllServicesStore>();
-    service = reactiveModel.state.services.singleWhere((serv)=>serv.id == widget.cartItem.orderService).name;
-    shred = reactiveModel.state.shreds.singleWhere((serv)=>serv.id == widget.cartItem.shudderId).name;
-    package = reactiveModel.state.packages.singleWhere((serv)=>serv.id == widget.cartItem.packageId).name;
+    service = reactiveModel.state.services
+        .singleWhere((serv) => serv.id == widget.cartItem.orderService)
+        .name;
+    shred = reactiveModel.state.shreds
+        .singleWhere((serv) => serv.id == widget.cartItem.shudderId)
+        .name;
+    package = reactiveModel.state.packages
+        .singleWhere((serv) => serv.id == widget.cartItem.packageId)
+        .name;
     super.initState();
   }
 
@@ -66,8 +72,7 @@ class _CartItemState extends State<CartItem> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           defaultRichTxt('مفروم', 'لا'),
-                          defaultRichTxt(
-                              'التجهيز', '$package'),
+                          defaultRichTxt('التجهيز', '$package'),
                         ],
                       ),
                     ),
@@ -93,7 +98,8 @@ class _CartItemState extends State<CartItem> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                defaultRichTxt('السعر', '${widget.cartItem.totalPrice} ر.س'),
+                defaultRichTxt('السعر',
+                    '${widget.cartItem.product.first.type == 1 ? (widget.cartItem.product.first.priceAfteroffer * widget.cartItem.qty).toString() : widget.cartItem.totalPrice} ر.س'),
                 SizedBox(width: 10),
                 editQuantityBtn()
               ],

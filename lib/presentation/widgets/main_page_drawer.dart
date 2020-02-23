@@ -16,8 +16,8 @@ class MainPageDrawer extends StatelessWidget {
           children: [
             Align(
                 alignment:
-                    Alignment.lerp(Alignment.center, Alignment.topCenter, 0.8),
-                child: FlutterLogo(size: 200)),
+                    Alignment.lerp(Alignment.center, Alignment.topCenter, 1),
+                child: Image.asset(Assets.logo,fit: BoxFit.cover,height: 300,width: 300),),
             Align(
               alignment: Alignment.center,
               child: Padding(

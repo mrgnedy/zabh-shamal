@@ -1,3 +1,4 @@
+import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/cart_store.dart';
@@ -18,7 +19,6 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   void initState() {
-
     final reactiveModel = Injector.getAsReactive<CartStore>();
     // if(reactiveModel.state.cartModel != null) return;
     reactiveModel.setState((state) => state.getCart(context).then((data) {
@@ -48,13 +48,15 @@ class _CartState extends State<Cart> {
             return reactiveModel.whenConnectionState(
               onIdle: () => IdleWidget(),
               onWaiting: () => WaitingWidget(),
-              onError: (e) => OnErrorWidget(e.toString()),
+              onError: (e) => OnErrorWidget(APIs.token == null? 'من فضلك سجل الدخول': "تعذر الاتصال"),
               onData: (s) {
                 int totalPrice = 0;
                 s.cartModel.data.forEach((cartItem) {
-                  totalPrice += int.parse(cartItem.totalPrice.toString());
+                  totalPrice += int.parse(cartItem.product.first.type == 1
+                      ? (cartItem.product.first.priceAfteroffer * cartItem.qty).toString()
+                      : cartItem.totalPrice.toString());
                 });
-                return Parent(
+                return s.cartModel.data.isEmpty? Center(child:Txt('العربة فارغة')): Parent(
                   child: ListView(
                     shrinkWrap: true,
                     children: List.generate(s.cartModel.data.length, (index) {
@@ -75,7 +77,7 @@ class _CartState extends State<Cart> {
   }
 
   Widget buildTotalPrice(int totalPrice) {
-    return Txt('المجموع: $totalPrice ر.س',
+    return Txt('المجموع: ${totalPrice} ر.س',
         style: StylesD.txtOnCardStyle.clone()
           ..background.color(ColorsD.main.withAlpha(180)));
   }
@@ -95,5 +97,4 @@ class _CartState extends State<Cart> {
       style: StylesD.txtOnCardStyle,
     );
   }
-
 }

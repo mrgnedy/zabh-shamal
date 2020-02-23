@@ -57,6 +57,7 @@ class StylesD {
 class Assets {
   static String productBackground =
       'assets/icons/shttefan-viNPa2F7fnw-unsplash.png';
+  static String logo= 'assets/icons/84273958_467844620576269_2633456491713003520_n.png';
 }
 
 class Urls {

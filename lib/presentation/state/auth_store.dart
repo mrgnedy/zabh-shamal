@@ -36,7 +36,7 @@ class AuthStore {
       final reactiveModel = Injector.getAsReactive<CartStore>();
       reactiveModel.state.cartModel = null;
       
-      Navigator.pop(context);
+      // Navigator.pop(context);
     }
     return logInModel;
   }
@@ -61,7 +61,7 @@ class AuthStore {
       pref.setString('auth_data', json.encode(registerModel.toJson()));
       logInModel = LogInModel.fromJson(registerModel.toJson());
       APIs.token = logInModel.apiToken;
-      Navigator.pop(context);
+      
     }
     return registerModel;
   }

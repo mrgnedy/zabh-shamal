@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
 class HowShopping extends StatefulWidget {
+  
+  final String jsonKey;
+  final String title;
+
+  const HowShopping({Key key, this.title, this.jsonKey}) : super(key: key);
   @override
   _HowShoppingState createState() => _HowShoppingState();
 }
@@ -23,7 +28,7 @@ class _HowShoppingState extends State<HowShopping> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('كيفيةالطلب'),
+        title: Text('${widget.title}'),
         centerTitle: true,
       ),
       body: buildHowShopping(),
@@ -51,7 +56,7 @@ class _HowShoppingState extends State<HowShopping> {
         onIdle: () => IdleWidget(),
         onWaiting: () => WaitingWidget(),
         onData: (data) =>
-            onDataWidget(data.infoModel.data.toJson()['shopping']),
+            onDataWidget(data.infoModel.data.toJson()['${widget.jsonKey}']),
         onError: null,
       ),
     );

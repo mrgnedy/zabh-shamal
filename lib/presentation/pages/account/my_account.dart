@@ -50,41 +50,66 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   accountWidget(InfoData infoData) {
-    return ListView(
-      shrinkWrap: true,
+    final reactiveModel = Injector.getAsReactive<AuthStore>();
+
+    return Column(
+      // shrinkWrap: true,
       children: <Widget>[
+        Visibility(
+          visible: APIs.token!=null,
+                  child: Padding(
+            padding: const EdgeInsets.only(right:12.0,top: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                    child: Txt(
+                  '${reactiveModel.state.logInModel?.data?.name}',
+                  style: TxtStyle()..alignmentContent.centerRight(),
+                )),
+                Expanded(
+                    child: Txt(
+                  ':الاسم',
+                  style: TxtStyle()..textColor(ColorsD.main)..alignmentContent.centerRight(),
+                )),
+              ],
+            ),
+          ),
+        ),
+        Visibility(
+          visible: APIs.token != null,
+                  child: Padding(
+            padding: const EdgeInsets.only(right:12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                    child: Txt(
+                  '${reactiveModel.state.logInModel?.data?.phone}',
+                  style: TxtStyle()..alignmentContent.centerRight(),
+                )),
+                Expanded(
+                    child: Txt(
+                  ':رقم الجوال',
+                  style: TxtStyle()..textColor(ColorsD.main)..alignmentContent.centerRight(),
+                )),
+              ],
+            ),
+          ),
+        ),
+
         Txt(
           'طلباتي',
           style: style,
           gesture: Gestures()
             ..onTap(() {
-              if(APIs.token != null)
-              Router.navigator.pushNamed(Router.orders);
-              else AlertDialogs.failed(context, content: "من فضلك سجل الدخول");
+              if (APIs.token != null)
+                Router.navigator.pushNamed(Router.orders);
+              else
+                AlertDialogs.failed(context, content: "من فضلك سجل الدخول");
             }),
         ),
-        Txt(
-          'من نحن',
-          style: style,
-          gesture: Gestures()
-            ..onTap(() => Router.navigator.pushNamed(Router.emptyPage,
-                arguments: EmptyPageArguments(
-                    content: infoData.aboutUs, title: 'من نحن'))),
-        ),
-        Txt('مشاركة التطبيق',
-            style: style,
-            gesture: Gestures()
-              ..onTap(
-                () => Share.share('text'),
-              )),
-        Txt(
-          'الشروط و الأحكام',
-          style: style,
-          gesture: Gestures()
-            ..onTap(() => Router.navigator.pushNamed(Router.emptyPage,
-                arguments: EmptyPageArguments(
-                    content: infoData.conditions, title: 'الشروط و الأحكام'))),
-        ),
+        
         Txt('تواصل معنا',
             style: style,
             gesture: Gestures()

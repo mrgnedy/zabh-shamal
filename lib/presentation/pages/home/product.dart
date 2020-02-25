@@ -40,14 +40,18 @@ class _ProductPageState extends State<ProductPage>
     tabController.addListener(() => controllerListner());
     final reactiveModel = Injector.getAsReactive<AllServicesStore>();
     packages = subPackages = List.from(reactiveModel.state.packages);
+    subPackages =
+        packages.where((pack) => pack.type == 1 - tabController.index).toList();
     // print(packages);
     services = subServices = List.from(reactiveModel.state.shreds);
+    subServices =
+        services.where((serv) => serv.type == 1 - tabController.index).toList();
     servicess = reactiveModel.state.services
         .singleWhere((serv) => serv.id == widget.product.serviceId)
         .name;
     dropDownValues = {
-      'التقطيع': services.first.name,
-      'التجهيز': packages.first.name,
+      'التقطيع': subServices.first.name,
+      'التجهيز': subPackages.first.name,
     };
     print(services);
     super.initState();
@@ -82,14 +86,14 @@ class _ProductPageState extends State<ProductPage>
                     Tab(child: Txt('منزل')),
                   ]),
             ),
-            buildPrice(widget.product.price.toString(),
-                widget.product.priceAfteroffer.toString(), widget.product.type),
+            buildPrice(widget.product.price, widget.product.priceAfteroffer,
+                widget.product.type),
             builCard('  الرقم', '${widget.product.id}'),
             builCard('  الوزن', '${widget.product.weight}'),
             builCard('  العمر', '${widget.product.age}'),
             builCard('  النوع', '$servicess'),
-            buildPackages('التجهيز', packages),
             buildServices('التقطيع', services),
+            buildPackages('التجهيز', packages),
             // buildHead('الرأس', services),
 
             buildArrivalTime(),
@@ -103,15 +107,21 @@ class _ProductPageState extends State<ProductPage>
                 Expanded(
                   child: Parent(
                     style: StylesD.btnOnCardStyle,
-                                      child: Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-
                       children: <Widget>[
                         Txt('الذهاب الي العربة',
+                            style: TxtStyle()..textColor(Colors.white),
                             gesture: Gestures()
-                              ..onTap(() => Router.navigator.pushNamed(Router.cart))),
-                        SizedBox(width: 10,),
-                        Icon(Icons.shopping_cart, color: Colors.white,),
+                              ..onTap(() =>
+                                  Router.navigator.pushNamed(Router.cart))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.shopping_cart,
+                          color: Colors.white,
+                        ),
                       ],
                     ),
                   ),
@@ -124,6 +134,13 @@ class _ProductPageState extends State<ProductPage>
   }
 
   addToCart(ProductModel product) {
+    if (APIs.token == null) {
+      AlertDialogs.failed(context, content: 'من فضلك سجل الدخول').then((val) {
+        if (val != true) Router.navigator.pushNamed(Router.authPage);
+        // throw Exception();
+      });
+      return;
+    }
     print('Adding to cart..');
     final reactiveModel = Injector.getAsReactive<CartStore>();
     reactiveModel
@@ -141,7 +158,6 @@ class _ProductPageState extends State<ProductPage>
   controllerListner() {
     subServices = [];
     subPackages = [];
-    dropDownValues = {};
     subServices.addAll(services
         .where(
           (serv) => serv.type == 1 - tabController.index,
@@ -150,6 +166,10 @@ class _ProductPageState extends State<ProductPage>
     subPackages.addAll(packages
         .where((serv) => serv.type == 1 - tabController.index)
         .toList());
+    dropDownValues = {
+      'التقطيع': subServices.first.name,
+      'التجهيز': subPackages.first.name,
+    };
     setState(() {});
   }
 
@@ -169,12 +189,26 @@ class _ProductPageState extends State<ProductPage>
           ..qty = counter
           ..resturant = '${restCtrler.text}'
           ..shudderId = services
-              .singleWhere((serv) => serv.name == dropDownValues['الخدمة'],
+              .singleWhere((serv) => serv.name == dropDownValues['التقطيع'],
                   orElse: () => packages.first)
               .id
       ];
-    Widget onIdleWidget = Txt('أضف للعربة',
-        style: StylesD.txtOnCardStyle.clone()..background.color(ColorsD.main),
+    Widget onIdleWidget = Parent(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Txt(
+              'أضف للعربة',
+              style: TxtStyle()..textColor(ColorsD.main),
+            ),
+            SizedBox(width: 10),
+            Icon(Icons.add_circle_outline, color: ColorsD.main),
+          ],
+        ),
+        style: StylesD.btnOnCardStyle.clone()
+          ..background.color(Colors.white)
+          ..border(color: ColorsD.main, all: 3),
         gesture: Gestures()
           ..onTap(() {
             print('tapped');
@@ -185,9 +219,27 @@ class _ProductPageState extends State<ProductPage>
       child: WaitingWidget(),
     );
 
-    Widget onErrorWidget = Txt('أضف للعربة',
-        style: StylesD.txtOnCardStyle.clone()..background.color(Colors.red),
-        gesture: Gestures()..onTap(() => addToCart(productModel)));
+    Widget onErrorWidget = Parent(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Txt(
+              'أضف للعربة',
+              style: TxtStyle()..textColor(Colors.red),
+            ),
+            SizedBox(width: 10),
+            Icon(Icons.add_circle_outline, color: Colors.red),
+          ],
+        ),
+        style: StylesD.btnOnCardStyle.clone()
+          ..background.color(Colors.white)
+          ..border(color: Colors.red, all: 3),
+        gesture: Gestures()
+          ..onTap(() {
+            print('tapped');
+            addToCart(productModel);
+          }));
     return StateBuilder(
       models: [Injector.getAsReactive<CartStore>()],
       builder: (context, reactiveModel) => reactiveModel.whenConnectionState(
@@ -239,9 +291,9 @@ class _ProductPageState extends State<ProductPage>
     );
   }
 
-  Widget buildPrice(String price, String priceAfter, int type) {
+  Widget buildPrice(int price, int priceAfter, int type) {
     return type == 0
-        ? builCard('  السعر', '${widget.product.price * counter} ر.س')
+        ? builCard('  السعر', '${(widget.product.price * counter).toInt()} ر.س')
         : Container(
             height: 70,
             child: Parent(
@@ -250,14 +302,14 @@ class _ProductPageState extends State<ProductPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Expanded(
-                      child: Txt('بدلا من $price',
+                      child: Txt('بدلا من ${(price * counter)} ر.س',
                           style: StylesD.txtStyle.clone()
                             ..textColor(Colors.red)
                             ..textDirection(TextDirection.rtl)
                             ..alignmentContent.centerLeft()),
                     ),
                     Expanded(
-                      child: Txt('$priceAfter',
+                      child: Txt('${priceAfter * counter} ر.س',
                           style: StylesD.txtStyle.clone()
                             ..textColor(ColorsD.main)
                             ..textDirection(TextDirection.rtl)

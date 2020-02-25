@@ -13,19 +13,21 @@ import 'package:bots/presentation/pages/drawer/offers_new.dart';
 import 'package:bots/presentation/pages/home/all_products.dart';
 import 'package:bots/presentation/pages/home/product.dart';
 import 'package:bots/presentation/pages/mainPage.dart';
+import 'package:bots/presentation/pages/splash.dart';
 
 import 'pages/auth/auth_page.dart';
 
 @autoRouter
 class $Router {
   // MyHomePage myHomePage;
-  @CustomRoute(initial: true)
+  // @CustomRoute(initial: true)
   MainPage mainPage;
   @CupertinoRoute()
   AllProducts allProducts;
   Cart cart;
-  @CupertinoRoute(maintainState: false)
+  // @CustomRoute(maintainState: false, durationInMilliseconds: 1000)
   AuthPage authPage;
+  // @CustomRoute(maintainState: false, durationInMilliseconds: 1000)
   CreateAccount createAccount;
   ProductPage productPage;
   OrderPage orderPage;
@@ -38,4 +40,6 @@ class $Router {
   ContactUsPage contactUsPage;
   OrderProductcsPage orderProductcsPage;
   HowShopping howShopping;
+  @initial
+  SelectCity selectCity;
 }

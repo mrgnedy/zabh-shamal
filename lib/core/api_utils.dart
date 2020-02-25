@@ -12,6 +12,7 @@ class APIs {
   static String imageBaseUrl =
       'http://zabayehalshamal.com/public/dash/assets/img/';
   static String token;
+  static String cities = '${baseUrl}cities';
   static final String bankInfoEP = '${baseUrl}banks';
   static final String allServicesEP = '${baseUrl}services';
   static final String packNShredEP = '${baseUrl}allservices';
@@ -66,7 +67,8 @@ class APIs {
         String _token = reactiveModel.state.logInModel?.apiToken;
     
     try {} catch (e) {}
-
+    
+    //  if(tok620
     final response = await http.post(url, body: body, headers: {
       'Authorization':
           'Bearer $_token'

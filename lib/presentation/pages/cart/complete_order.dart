@@ -30,9 +30,10 @@ class _OrderPageState extends State<OrderPage> {
   void initState() {
     // TODO: implement initState
     final reactiveModel = Injector.getAsReactive<AuthStore>();
-    phoneCtrler.text = reactiveModel.state.logInModel.data.phone;
+    phoneCtrler.text = reactiveModel.state.logInModel.data.phone.substring(4);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,7 +158,7 @@ class _OrderPageState extends State<OrderPage> {
                 .then((perm) async {
               if (perm == PermissionStatus.disabled)
                 AppSettings.openLocationSettings();
-              
+
               Router.navigator
                   .pushNamed(Router.map, arguments: setPostion)
                   .then((s) async {
@@ -237,9 +238,64 @@ class _OrderPageState extends State<OrderPage> {
 
   File _image;
   Future<File> pickImage() async {
-    return await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
+    // File tempImage;
+    return await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(
+                        context,
+                        await ImagePicker.pickImage(
+                          source: ImageSource.camera,
+                        ));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Txt('الكاميرا'),
+                      ),
+                      Icon(Icons.camera),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(
+                        context,
+                        await ImagePicker.pickImage(
+                          source: ImageSource.gallery,
+                        ));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Txt('الاستوديو'),
+                      ),
+                      Icon(Icons.image),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+    // return await ImagePicker.pickImage(
+    //   source: ImageSource.gallery,
+    // );
+    // return tempImage;
   }
 
   Widget setImage() {
@@ -274,7 +330,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   completeOrder() {
-    if ((_image == null && paymentMethod==1)||
+    if ((_image == null && paymentMethod == 1) ||
         phoneCtrler.text.isEmpty ||
         addressCtrler.text.isEmpty) {
       AlertDialogs.failed(context, content: 'من فضلك أكمل البيانات');
@@ -282,21 +338,28 @@ class _OrderPageState extends State<OrderPage> {
     }
 
     final reactiveModel = Injector.getAsReactive<CartStore>();
-    reactiveModel.setState((state) => state.makeOrder(
-        context,
-        <String, String>{
-          "address": address.first.addressLine,
-          "lat": address.first.coordinates.latitude.toString(),
-          "lng": address.first.coordinates.longitude.toString(),
-          "city": address.first.adminArea,
-          "name": Injector.get<AuthStore>().logInModel.data.name,
-          "phone": phoneCtrler.text,
-          "payment_type": paymentMethod.toString(),
-          "products": json.encode({"products": (state.cartModel.data)}),
-          // "image" : MultipartFile.fromString(_image.readAsStringSync(), 'image.png')
-        },
-        paymentMethod == 1 ? _image.path : null).then((data){
-          if(data != null) AlertDialogs.success(context, content: 'تم اضافة طلبك بنجاح');
+    reactiveModel.setState((state) => state
+            .makeOrder(
+                context,
+                <String, String>{
+                  "address": address.first.addressLine,
+                  "lat": address.first.coordinates.latitude.toString(),
+                  "lng": address.first.coordinates.longitude.toString(),
+                  "city": address.first.adminArea,
+                  "name": Injector.get<AuthStore>().logInModel.data.name,
+                  "phone": phoneCtrler.text,
+                  "payment_type": paymentMethod.toString(),
+                  "products": json.encode({"products": (state.cartModel.data)}),
+                  // "image" : MultipartFile.fromString(_image.readAsStringSync(), 'image.png')
+                },
+                paymentMethod == 1 ? _image.path : null)
+            .then((data) {
+          if (data != null)
+            AlertDialogs.success(context, content: 'تم اضافة طلبك بنجاح')
+                .then((_) {
+              Router.navigator.pushNamedAndRemoveUntil(
+                  Router.mainPage, (Route<dynamic> router) => false);
+            });
         }));
   }
 

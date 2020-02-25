@@ -48,28 +48,34 @@ class _CartState extends State<Cart> {
             return reactiveModel.whenConnectionState(
               onIdle: () => IdleWidget(),
               onWaiting: () => WaitingWidget(),
-              onError: (e) => OnErrorWidget(APIs.token == null? 'من فضلك سجل الدخول': "تعذر الاتصال"),
+              onError: (e) => OnErrorWidget(
+                  APIs.token == null ? 'من فضلك سجل الدخول' : "تعذر الاتصال"),
               onData: (s) {
                 int totalPrice = 0;
                 s.cartModel.data.forEach((cartItem) {
                   totalPrice += int.parse(cartItem.product.first.type == 1
-                      ? (cartItem.product.first.priceAfteroffer * cartItem.qty).toString()
+                      ? (cartItem.product.first.priceAfteroffer * cartItem.qty)
+                          .toString()
                       : cartItem.totalPrice.toString());
                 });
-                return s.cartModel.data.isEmpty? Center(child:Txt('العربة فارغة')): Parent(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: List.generate(s.cartModel.data.length, (index) {
-                      return CartItem(s.cartModel.data[index], index);
-                    })
-                      ..addAll(
-                        [
-                          buildTotalPrice(totalPrice),
-                          completeOrderButton(),
-                        ],
-                      ),
-                  ),
-                );
+                return s.cartModel.data.isEmpty
+                    ? Center(child: Txt('العربة فارغة'))
+                    : Parent(
+                        child: ListView(
+                          shrinkWrap: true,
+
+                          children:
+                              List.generate(s.cartModel.data.length, (index) {
+                            return CartItem(s.cartModel.data[index], index);
+                          })..reversed
+                                ..addAll(
+                                  [
+                                    buildTotalPrice(totalPrice),
+                                    completeOrderButton(),
+                                  ],
+                                ),
+                        ),
+                      );
               },
             );
           }),

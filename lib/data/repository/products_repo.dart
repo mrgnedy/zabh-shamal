@@ -1,5 +1,6 @@
 import 'package:bots/core/api_utils.dart';
 import 'package:bots/data/models/all_services.dart';
+import 'package:bots/data/models/cities_model.dart';
 import 'package:bots/data/models/offers_model.dart';
 import 'package:bots/data/models/pack_shred_model.dart';
 import 'package:bots/domain/repo/products_repo_inter.dart';
@@ -36,5 +37,13 @@ class ProductsRepo implements IProductsRepo {
     if(response != null) return PackNShredModel.fromJson(response);
     throw Exception();
     
+  }
+
+  @override
+  Future<CititesModel> getAllCities(BuildContext context) async{
+    String url = APIs.cities;
+    final response = await APIs.getRequest(context, url);
+    if(response != null) return CititesModel.fromJson(response);
+    throw Exception();
   }
 }

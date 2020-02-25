@@ -43,5 +43,20 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<YES/>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية الوصول للصور لادراج صورة لايصال الدفع</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية الوصول للكاميرا لادراج صورة لايصال الدفع</string>
+
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان/string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    	<string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
 </dict>
 </plist>

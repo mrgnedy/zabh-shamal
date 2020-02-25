@@ -28,52 +28,60 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Form(
           key: formKey,
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              FlutterLogo(
-                size: 200,
-              ),
-              buildUsernameTF(),
-              buildPasswordTF(),
-              Txt(
-                'نسيت كلمة المرور؟',
-                style: TxtStyle()
-                  ..fontFamily('Cairo')
-                  ..alignment.centerRight()
-                  ..margin(horizontal: 20)
-                  ..bold(),
-              ),
-              logInBtn(),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Txt(
-                    'إنشاء حساب',
-                    style: TxtStyle()
-                      ..fontFamily('Cairo')
-                      ..textColor(ColorsD.main)
-                      ..alignment.center()
-                      ..bold(),
-                    gesture: Gestures()
-                      ..onTap(() =>
-                          Router.navigator.pushNamed(Router.createAccount)),
-                  ),
-                  SizedBox(width: 5),
-                  Txt(
-                    'ليس لديك حساب؟',
-                    style: TxtStyle()
-                      ..fontFamily('Cairo')
-                      ..alignment.center()
-                      ..bold(),
-                  ),
-                ],
-              )
-            ],
+          child: Container(
+            // alignment: Alignment(0, -0.65),
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Image.asset(
+                  Assets.logoKharoof,
+                  height: 200,
+                ),
+                buildUsernameTF(),
+                buildPasswordTF(),
+                SizedBox(
+                  height: 20,
+                ),
+                // Txt(
+                //   'نسيت كلمة المرور؟',
+                //   style: TxtStyle()
+                //     ..fontFamily('Cairo')
+                //     ..alignment.centerRight()
+                //     ..margin(horizontal: 20)
+                //     ..bold(),
+                // ),
+                logInBtn(),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Txt(
+                      'إنشاء حساب',
+                      style: TxtStyle()
+                        ..fontFamily('Cairo')
+                        ..textColor(ColorsD.main)
+                        ..alignment.center()
+                        ..bold(),
+                      gesture: Gestures()
+                        ..onTap(() =>
+                            Router.navigator.pushNamed(Router.createAccount)),
+                    ),
+                    SizedBox(width: 5),
+                    Txt(
+                      'ليس لديك حساب؟',
+                      style: TxtStyle()
+                        ..fontFamily('Cairo')
+                        ..alignment.center()
+                        ..bold(),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -120,6 +128,7 @@ class _AuthPageState extends State<AuthPage> {
           if (s == null || s.isEmpty) return "هذا الحقل مطلوب";
         },
         style: TextStyle(color: Colors.black),
+        keyboardType: TextInputType.number,
         decoration: InputDecoration(
           // prefixText: '+966 |',
           hintText: 'رقم الجوال',
@@ -150,7 +159,7 @@ class _AuthPageState extends State<AuthPage> {
       return;
     }
     await reactiveModel.setState((state) => state
-            .login(context, phoneCtrler.text, passwordCtrler.text)
+            .login(context, '+966${phoneCtrler.text}', passwordCtrler.text)
             .then((data) {
           AlertDialogs.success(context, content: 'تم تسجيل دخولك بنجاح')
               .then((_) {

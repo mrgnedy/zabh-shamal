@@ -28,6 +28,7 @@ class _OffersPageState extends State<OffersPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('عروض و منتجات'),
+        centerTitle: true,
       ),
       body: StateBuilder<AllServicesStore>(
         models: [Injector.getAsReactive<AllServicesStore>()],
@@ -58,7 +59,9 @@ class _OffersPageState extends State<OffersPage> {
   Widget offerItem(Data data) {
     Size size = MediaQuery.of(context).size;
     return Parent(
-      gesture: Gestures()..onTap(()=>Router.navigator.pushNamed(Router.productPage, arguments: Product.fromJson(data.toJson()))),
+      gesture: Gestures()
+        ..onTap(() => Router.navigator.pushNamed(Router.productPage,
+            arguments: Product.fromJson(data.toJson()))),
       style: StylesD.cartStyle,
       child: Stack(
         children: <Widget>[
@@ -101,8 +104,17 @@ class _OffersPageState extends State<OffersPage> {
                     children: <Widget>[
                       Txt('${data.name}'),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [Txt('${data.price}')]),
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Txt('${data.price}ر.س',
+                              style: TxtStyle()
+                                ..textDirection(TextDirection.rtl)
+                                ..textColor(Colors.grey)
+                                ..textDecoration(TextDecoration.lineThrough)),
+                          Txt('   ر.س '),
+                          Txt('${data.priceAfteroffer}'),
+                        ],
+                      ),
                       Txt('${data.desc}'),
                     ],
                   ),

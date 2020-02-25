@@ -13,6 +13,14 @@ class ContactUsPage extends StatefulWidget {
 }
 
 class _ContactUsPageState extends State<ContactUsPage> {
+  final reactiveModel = Injector.getAsReactive<AccountStore>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    reactiveModel.state.getInfo(context);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,9 +71,13 @@ class _ContactUsPageState extends State<ContactUsPage> {
               ],
             ),
           ),
-              SizedBox(height: 40,),
-              sendBtn(),
-              SizedBox(height: 20,),
+          SizedBox(
+            height: 40,
+          ),
+          sendBtn(),
+          SizedBox(
+            height: 20,
+          ),
           Row(
             children: <Widget>[
               Expanded(
@@ -123,7 +135,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   }
 
   Widget buildPhone() {
-    String phoneNumber = "tel:${Urls.phoneNumber}";
+    String phoneNumber = "tel:${reactiveModel.state.infoModel.data.phone}";
     return GestureDetector(
       onTap: () => phoneCall(phoneNumber),
       child: Icon(
@@ -136,7 +148,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Widget buildWhats() {
     String whatsNumber =
-        "https://api.whatsapp.com/send?phone=${Urls.phoneNumber}&text=${'السلام عليكم'}";
+        "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}&text=${'السلام عليكم'}";
     return GestureDetector(
       onTap: () => phoneCall(whatsNumber),
       child: Icon(

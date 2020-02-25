@@ -1,13 +1,14 @@
-
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/pages/account/my_account.dart';
 import 'package:bots/presentation/pages/cart/cart.dart';
 import 'package:bots/presentation/pages/contacts/contacts.dart';
+import 'package:bots/presentation/state/account_store.dart';
 import 'package:bots/presentation/widgets/main_page_drawer.dart';
 import 'package:bots/presentation/widgets/navigationBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'home/all_services.dart';
@@ -19,6 +20,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   // int selIndex = 3;
+  final reactiveModel = Injector.getAsReactive<AccountStore>();
+  @override
+  void initState() {
+    reactiveModel.state.getInfo(context);
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,9 +100,12 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildPhone() {
-    String phoneNumber = "tel:${Urls.phoneNumber}";
     return GestureDetector(
-      onTap: () => phoneCall(phoneNumber),
+      onTap: () {
+        String phoneNumber = "tel:${reactiveModel.state.infoModel.data.phone}";
+
+        phoneCall(phoneNumber);
+      },
       child: Icon(
         Icons.phone,
         color: Colors.white,
@@ -102,10 +114,12 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildWhats() {
-    String whatsNumber =
-        "https://api.whatsapp.com/send?phone=${Urls.phoneNumber}&text=${('السلام عليكم')}";
     return GestureDetector(
-      onTap: () => phoneCall(whatsNumber),
+      onTap: () {
+        String whatsNumber =
+            "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}&text=${('السلام عليكم')}";
+        phoneCall(whatsNumber);
+      },
       child: Icon(
         FontAwesomeIcons.whatsapp,
         color: Colors.white,

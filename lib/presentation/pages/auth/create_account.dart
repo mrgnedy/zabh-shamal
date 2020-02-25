@@ -5,6 +5,8 @@ import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
 
+import '../../router.gr.dart';
+
 class CreateAccount extends StatefulWidget {
   @override
   _CreateAccountState createState() => _CreateAccountState();
@@ -34,33 +36,46 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Form(
           key: formKey,
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              Align(
-                child: FlutterLogo(size: 200),
-              ),
-              buildPhoneTF(),
-              buildPasswordTF(),
-              buildPasswordTFRE(),
-              buildName(),
-              buildEmail(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Txt(
-                    'الشروط والاحكام',
-                    style: TxtStyle()..textColor(ColorsD.main),
-                    gesture: Gestures(),
+          child: Align(
+            alignment: Alignment(0, -0.65),
+            child: ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Align(
+                  child: Hero(
+                    tag: '5aroof',
+                    
+                                      child: Image.asset(Assets.logoKharoof,
+                        height: 200, fit: BoxFit.cover),
                   ),
-                  Txt('بانشائك هذا الحساب فانت توافق علي '),
-                ],
-              ),
-              registerBtn()
-            ],
+                ),
+                buildPhoneTF(),
+                buildName(),
+                buildPasswordTF(),
+                buildPasswordTFRE(),
+                // buildEmail(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Txt(
+                      'الشروط والاحكام',
+                      style: TxtStyle()..textColor(ColorsD.main),
+                      gesture: Gestures()..onTap(()=>Router.navigator.pushNamed(
+                                Router.howShopping,
+                                arguments: HowShoppingArguments(
+                                    jsonKey: 'conditions',
+                                    title: 'الشروط و الأحكام'))),
+                    ),
+                    Txt('بانشائك هذا الحساب فانت توافق علي '),
+                  ],
+                ),
+                registerBtn()
+              ],
+            ),
           ),
         ),
       ),
@@ -78,6 +93,7 @@ class _CreateAccountState extends State<CreateAccount> {
         validator: (s) {
           if (s.length != 9 && s.length != 10) return "من فضلك ادخل رقم صحيح";
         },
+        keyboardType: TextInputType.number,
         controller: phoneCtrler,
         style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
@@ -228,7 +244,7 @@ class _CreateAccountState extends State<CreateAccount> {
     print('sds');
     final reactiveModel = Injector.getAsReactive<AuthStore>();
     reactiveModel.setState((state) => state
-            .register(context, nameCtrler.text, phoneCtrler.text,
+            .register(context, nameCtrler.text, '+966${phoneCtrler.text}',
                 passwordCtrler.text, passwordCtrler.text, emailCtrler.text)
             .then((data) {
           if (data != null)

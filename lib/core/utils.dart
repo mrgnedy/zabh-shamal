@@ -24,16 +24,16 @@ class StylesD {
       borderRadius: BorderRadius.circular(8),
     ),
   );
-  static TxtStyle txtOnCardStyle = TxtStyle()
-    ..fontFamily('Cairo')
-    ..textColor(Colors.white)
-    ..alignment.center()
-    ..alignmentContent.center()
-    ..borderRadius(all: 8)
-    ..height(size.height / 18)
-    ..background.color(ColorsD.main)
-    ..elevation(10, color: ColorsD.elevationColor)
-    ..margin(horizontal: 20, bottom: 10);
+    static TxtStyle txtOnCardStyle = TxtStyle()
+      ..fontFamily('Cairo')
+      ..textColor(Colors.white)
+      ..alignment.center()
+      ..alignmentContent.center()
+      ..borderRadius(all: 8)
+      ..height(size.height / 18)
+      ..background.color(ColorsD.main)
+      ..elevation(10, color: ColorsD.elevationColor)
+      ..margin(horizontal: 20, bottom: 10);
   static ParentStyle btnOnCardStyle = ParentStyle()
     ..alignment.center()
     ..alignmentContent.center()
@@ -58,6 +58,8 @@ class Assets {
   static String productBackground =
       'assets/icons/shttefan-viNPa2F7fnw-unsplash.png';
   static String logo= 'assets/icons/84273958_467844620576269_2633456491713003520_n.png';
+  static String logoKharoof= 'assets/icons/logotipo-de-ovelhas_26820-149@3x.png';
+
 }
 
 class Urls {
@@ -93,7 +95,7 @@ class AlertDialogs {
                   color: ColorsD.main,
                   size: 30,
                 ),
-                Txt(title),
+                Txt(title,style: StylesD.txtStyle,),
               ],
             ),
             Divider(
@@ -107,7 +109,7 @@ class AlertDialogs {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height / 8,
           child: Align(
-            child: Txt(content),
+            child: Txt(content,style: StylesD.txtStyle,),
           ),
         ),
         actions: <Widget>[
@@ -125,9 +127,9 @@ class AlertDialogs {
                 padding: const EdgeInsets.only(right: 37.0),
                 child: ClippedButton(
                   width: MediaQuery.of(context).size.width / 2,
-                  child: Txt('موافق'),
+                  child: Txt('موافق',style: TxtStyle()..textColor(Colors.white),),
                   color: ColorsD.main,
-                  onTapCallback: () => Navigator.of(context).pop(),
+                  onTapCallback: () => Navigator.of(context).pop(true),
                 ),
               )
             ],

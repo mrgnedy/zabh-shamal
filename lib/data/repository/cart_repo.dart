@@ -61,11 +61,13 @@ class CartRepo implements IOrderRepo {
       "Authorization":
           "Bearer ${APIs.token}"
     });
+
     response.fields.addAll(orderModel);
     if(path != null)
     response.files.add(await MultipartFile.fromPath('image', path));
     // print(path);
     final res = await response.send();
+    
     // res.stream.listen((onData){
     //   print(utf8.decode(onData));
     // });

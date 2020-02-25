@@ -102,6 +102,7 @@ class _OrdersState extends State<OrdersPage>
   }
 
   Widget orderItem(Initorders order) {
+    String createdTime = DateTime.parse(order.order.first.createdAt).add(Duration(hours: 2)).toString();
     return Parent(
       gesture: Gestures() 
         ..onTap(() => Router.navigator.pushNamed(Router.orderProductcsPage,
@@ -155,7 +156,7 @@ class _OrdersState extends State<OrdersPage>
                             TextStyle(color: ColorsD.main, fontFamily: 'Cairo'),
                       ),
                       TextSpan(
-                        text: '${order.order.first.createdAt}',
+                        text: '${createdTime.split(' ')[1].split('.')[0]}  ${createdTime.split(' ')[0]}',
                         style:
                             TextStyle(color: Colors.black, fontFamily: 'Cairo'),
                       ),

@@ -24,9 +24,10 @@ import 'package:bots/presentation/pages/account/contactUs_page.dart';
 import 'package:bots/presentation/pages/account/order_products.dart';
 import 'package:bots/data/models/my_orders_model.dart';
 import 'package:bots/presentation/pages/drawer/how_shopping.dart';
+import 'package:bots/presentation/pages/splash.dart';
 
 class Router {
-  static const mainPage = '/';
+  static const mainPage = '/main-page';
   static const allProducts = '/all-products';
   static const cart = '/cart';
   static const authPage = '/auth-page';
@@ -41,6 +42,7 @@ class Router {
   static const contactUsPage = '/contact-us-page';
   static const orderProductcsPage = '/order-productcs-page';
   static const howShopping = '/how-shopping';
+  static const selectCity = '/';
   static GlobalKey<NavigatorState> get navigatorKey =>
       getNavigatorKey<Router>();
   static NavigatorState get navigator => navigatorKey.currentState;
@@ -49,8 +51,8 @@ class Router {
     final args = settings.arguments;
     switch (settings.name) {
       case Router.mainPage:
-        return PageRouteBuilder(
-          pageBuilder: (ctx, animation, secondaryAnimation) => MainPage(),
+        return MaterialPageRoute(
+          builder: (_) => MainPage(),
           settings: settings,
         );
       case Router.allProducts:
@@ -70,10 +72,9 @@ class Router {
           settings: settings,
         );
       case Router.authPage:
-        return CupertinoPageRoute(
+        return MaterialPageRoute(
           builder: (_) => AuthPage(),
           settings: settings,
-          maintainState: false,
         );
       case Router.createAccount:
         return MaterialPageRoute(
@@ -109,9 +110,10 @@ class Router {
           return misTypedArgsRoute<Function>(args);
         }
         final typedArgs = args as Function;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
           builder: (_) => Map(typedArgs),
           settings: settings,
+          fullscreenDialog: true,
         );
       case Router.offersPage:
         return MaterialPageRoute(
@@ -149,8 +151,21 @@ class Router {
           settings: settings,
         );
       case Router.howShopping:
+        if (hasInvalidArgs<HowShoppingArguments>(args)) {
+          return misTypedArgsRoute<HowShoppingArguments>(args);
+        }
+        final typedArgs =
+            args as HowShoppingArguments ?? HowShoppingArguments();
         return MaterialPageRoute(
-          builder: (_) => HowShopping(),
+          builder: (_) => HowShopping(
+              key: typedArgs.key,
+              title: typedArgs.title,
+              jsonKey: typedArgs.jsonKey),
+          settings: settings,
+        );
+      case Router.selectCity:
+        return MaterialPageRoute(
+          builder: (_) => SelectCity(),
           settings: settings,
         );
       default:
@@ -184,4 +199,12 @@ class OrderProductcsPageArguments {
   final String title;
   final List<OrderProducts> products;
   OrderProductcsPageArguments({this.key, this.title, this.products});
+}
+
+//HowShopping arguments holder class
+class HowShoppingArguments {
+  final Key key;
+  final String title;
+  final String jsonKey;
+  HowShoppingArguments({this.key, this.title, this.jsonKey});
 }

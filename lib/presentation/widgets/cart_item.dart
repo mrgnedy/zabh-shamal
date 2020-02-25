@@ -54,7 +54,7 @@ class _CartItemState extends State<CartItem> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -71,7 +71,7 @@ class _CartItemState extends State<CartItem> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          defaultRichTxt('مفروم', 'لا'),
+                          defaultRichTxt('شلوطة', 'لا'),
                           defaultRichTxt('التجهيز', '$package'),
                         ],
                       ),
@@ -141,13 +141,17 @@ class _CartItemState extends State<CartItem> {
 
   Widget defaultRichTxt(String key, String value) {
     return RichText(
+      textAlign: TextAlign.right,
         text: TextSpan(children: [
       TextSpan(
-          text: '$key: ',
-          style: TextStyle(color: ColorsD.main, fontFamily: 'Cairo')),
+        text: '$key: ',
+        style: TextStyle(color: ColorsD.main, fontFamily: 'Cairo',),
+        
+      ),
       TextSpan(
-          text: '$value',
-          style: TextStyle(color: Colors.black, fontFamily: 'Cairo')),
+        text: '$value',
+        style: TextStyle(color: Colors.black, fontFamily: 'Cairo'),
+      ),
     ]));
   }
 

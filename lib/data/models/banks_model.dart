@@ -45,7 +45,7 @@ class BankData {
   BankData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    accoutNumber = json['accout_number'];
+    accoutNumber = json['account_number'];
     iban = json['iban'];
     image = json['image'];
     createdAt = json['created_at'];
@@ -56,7 +56,7 @@ class BankData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['accout_number'] = this.accoutNumber;
+    data['account_number'] = this.accoutNumber;
     data['iban'] = this.iban;
     data['image'] = this.image;
     data['created_at'] = this.createdAt;

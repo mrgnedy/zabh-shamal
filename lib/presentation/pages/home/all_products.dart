@@ -88,8 +88,8 @@ class _AllProductsState extends State<AllProducts> {
         Align(
           alignment: Alignment.centerRight,
           child: Txt(
-            '${product.name}',
-            style: TxtStyle()..fontFamily('Cairo'),
+            '${product.price} ر.س',
+            style: TxtStyle()..fontFamily('Cairo')..textDirection(TextDirection.rtl),
           ),
         ),
       ],

@@ -25,6 +25,7 @@ class CartStore {
 
   Future addToCart(BuildContext context, ProductModel product) async {
     print('Inside adding to cart');
+    print('rrrrrrrrrrr ${product.products.first.resturant}');
     return await orderRepo.addToCart(context, product);
   }
 

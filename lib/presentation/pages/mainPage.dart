@@ -117,7 +117,7 @@ class _MainPageState extends State<MainPage> {
     return GestureDetector(
       onTap: () {
         String whatsNumber =
-            "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}&text=${('السلام عليكم')}";
+            "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}";
         phoneCall(whatsNumber);
       },
       child: Icon(

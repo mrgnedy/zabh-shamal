@@ -19,11 +19,10 @@ class CartItem extends StatefulWidget {
   _CartItemState createState() => _CartItemState();
 }
 
-String service;
-String package;
-String shred;
-
 class _CartItemState extends State<CartItem> {
+  String service;
+  String package;
+  String shred;
   @override
   void initState() {
     final reactiveModel = Injector.getAsReactive<AllServicesStore>();
@@ -31,10 +30,10 @@ class _CartItemState extends State<CartItem> {
         .singleWhere((serv) => serv.id == widget.cartItem.orderService)
         .name;
     shred = reactiveModel.state.shreds
-        .singleWhere((serv) => serv.id == widget.cartItem.shudderId)
+        .firstWhere((serv) => serv.id == widget.cartItem.shudderId)
         .name;
     package = reactiveModel.state.packages
-        .singleWhere((serv) => serv.id == widget.cartItem.packageId)
+        .firstWhere((serv) => serv.id == widget.cartItem.packageId)
         .name;
     super.initState();
   }
@@ -47,8 +46,7 @@ class _CartItemState extends State<CartItem> {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          buildDelete(),
-          buildCounter(),
+          
           Align(
             alignment: Alignment.topRight,
             child: Row(
@@ -65,17 +63,18 @@ class _CartItemState extends State<CartItem> {
                     // SizedBox(height: 10),
                     defaultRichTxt('التقطيع', '$shred'),
                     // SizedBox(height: 10),
-                    Container(
-                      width: size.width / 2,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          defaultRichTxt('شلوطة', 'لا'),
-                          defaultRichTxt('التجهيز', '$package'),
-                        ],
-                      ),
-                    ),
+                    defaultRichTxt('التجهيز', '$package'),
+                    // Container(
+                    //   width: size.width * 0.51,
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.max,
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: <Widget>[
+                    //       defaultRichTxt('شلوطة',
+                    //           '${widget.cartItem.power == 1 ? "نعم" : "لا"}'),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(width: 10),
@@ -104,7 +103,9 @@ class _CartItemState extends State<CartItem> {
                 editQuantityBtn()
               ],
             ),
-          )
+          ),
+          buildDelete(),
+          buildCounter()
         ],
       ),
     );
@@ -140,19 +141,31 @@ class _CartItemState extends State<CartItem> {
   }
 
   Widget defaultRichTxt(String key, String value) {
-    return RichText(
-      textAlign: TextAlign.right,
-        text: TextSpan(children: [
-      TextSpan(
-        text: '$key: ',
-        style: TextStyle(color: ColorsD.main, fontFamily: 'Cairo',),
+    final size = MediaQuery.of(context).size;
+    return Container(
+      width: size.width / 2,
+      child: RichText(
         
-      ),
-      TextSpan(
-        text: '$value',
-        style: TextStyle(color: Colors.black, fontFamily: 'Cairo'),
-      ),
-    ]));
+          maxLines: null,
+          textAlign: TextAlign.right,
+          text: TextSpan(children: [
+            TextSpan(
+              
+              text: '$key: ',
+              style: TextStyle(
+                color: ColorsD.main,
+                fontFamily: 'Cairo',
+              ),
+            ),
+            TextSpan(
+              text: '$value',
+              style: TextStyle(
+                height: 1,
+                
+                color: Colors.black, fontFamily: 'Cairo'),
+            ),
+          ])),
+    );
   }
 
   editQuantitiy() {

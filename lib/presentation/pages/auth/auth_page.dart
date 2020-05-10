@@ -30,59 +30,76 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Form(
-          key: formKey,
-          child: Container(
-            // alignment: Alignment(0, -0.65),
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Image.asset(
-                  Assets.logoKharoof,
-                  height: 200,
-                ),
-                buildUsernameTF(),
-                buildPasswordTF(),
-                SizedBox(
-                  height: 20,
-                ),
-                // Txt(
-                //   'نسيت كلمة المرور؟',
-                //   style: TxtStyle()
-                //     ..fontFamily('Cairo')
-                //     ..alignment.centerRight()
-                //     ..margin(horizontal: 20)
-                //     ..bold(),
-                // ),
-                logInBtn(),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: Container(
+                // alignment: Alignment(0, -0.65),
+                child: ListView(
+                  shrinkWrap: true,
                   children: <Widget>[
-                    Txt(
-                      'إنشاء حساب',
-                      style: TxtStyle()
-                        ..fontFamily('Cairo')
-                        ..textColor(ColorsD.main)
-                        ..alignment.center()
-                        ..bold(),
-                      gesture: Gestures()
-                        ..onTap(() =>
-                            Router.navigator.pushNamed(Router.createAccount)),
+                    Image.asset(
+                      Assets.logoKharoof,
+                      height: 200,
                     ),
-                    SizedBox(width: 5),
                     Txt(
-                      'ليس لديك حساب؟',
+                      'ذبائح الشمال',
                       style: TxtStyle()
-                        ..fontFamily('Cairo')
-                        ..alignment.center()
-                        ..bold(),
+                        ..fontWeight(FontWeight.w600)
+                        ..textShadow(blur: 10)
+                        ..fontSize(32)..alignment.center()
                     ),
+                    buildUsernameTF(),
+                    buildPasswordTF(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    // Txt(
+                    //   'نسيت كلمة المرور؟',
+                    //   style: TxtStyle()
+                    //     ..fontFamily('Cairo')
+                    //     ..alignment.centerRight()
+                    //     ..margin(horizontal: 20)
+                    //     ..bold(),
+                    // ),
+                    logInBtn(),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Txt(
+                          'إنشاء حساب',
+                          style: TxtStyle()
+                            ..fontFamily('Cairo')
+                            ..textColor(ColorsD.main)
+                            ..alignment.center()
+                            ..bold(),
+                          gesture: Gestures()
+                            ..onTap(() => Router.navigator
+                                .pushNamed(Router.createAccount)),
+                        ),
+                        SizedBox(width: 5),
+                        Txt(
+                          'ليس لديك حساب؟',
+                          style: TxtStyle()
+                            ..fontFamily('Cairo')
+                            ..alignment.center()
+                            ..bold(),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
-          ),
+            Parent(
+              child: Icon(Icons.arrow_back),
+              gesture: Gestures()
+                ..onTap(() => [Navigator.pop(context), print('s')]),
+              style: ParentStyle()..margin(all: 12),
+            ),
+          ],
         ),
       ),
     );

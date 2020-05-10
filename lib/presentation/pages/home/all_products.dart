@@ -3,6 +3,7 @@ import 'package:bots/core/utils.dart';
 import 'package:bots/data/models/all_services.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/widgets/main_page_drawer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 
@@ -56,43 +57,65 @@ class _AllProductsState extends State<AllProducts> {
 
   Widget _buildSingleProduct(Product product) {
     Size size = MediaQuery.of(context).size;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Router.navigator.pushNamed(Router.productPage, arguments: product);
-          },
-          child: Container(
-            // color: Colors.green,
-            height: size.height / 4,
-            width: size.width / 2,
-            child: Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                Opacity(
-                    opacity: 0.1,
-                    child: Image.asset(
-                      Assets.productBackground,
-                      fit: BoxFit.cover,
-                    )),
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.network('${APIs.imageBaseUrl}${product.image}',
-                      fit: BoxFit.cover, height: size.height / 4),
-                )
-              ],
+    return Container(
+      // color: Colors.yellow,
+      width: size.width,
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Router.navigator.pushNamed(Router.productPage, arguments: product);
+            },
+            child: Container(
+              // color: Colors.red,
+              height: size.height / 4,
+              width: size.width,
+              child: Stack(
+                fit: StackFit.passthrough,
+                children: <Widget>[
+                  Opacity(
+                      opacity: 0.1,
+                      child: Image.asset(
+                        Assets.productBackground,
+                        fit: BoxFit.cover,
+                      )),
+                  Align(
+                    alignment: Alignment.center,
+                    child: CachedNetworkImage(
+                        placeholder: (context, s) => Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                        imageBuilder: (context, imageB)=> Container(
+                          height: size.height/4,
+                          width: size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            
+                            image: DecorationImage(image: imageB, fit: BoxFit.cover, )
+                          ),
+                        ),
+                        imageUrl: '${APIs.imageBaseUrl}${product.image}',
+                        // fit: BoxFit.fill,
+                        height: size.height / 4,
+                        width: size.width,
+                        ),
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Txt(
-            '${product.name}',
-            style: TxtStyle()..fontFamily('Cairo'),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Txt(
+              '${product.price} ر.س',
+              style: TxtStyle()
+                ..fontFamily('Cairo')
+                ..textDirection(TextDirection.rtl),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

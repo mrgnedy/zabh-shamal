@@ -38,45 +38,62 @@ class _CreateAccountState extends State<CreateAccount> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Form(
-          key: formKey,
-          child: Align(
-            alignment: Alignment(0, -0.65),
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Align(
-                  child: Hero(
-                    tag: '5aroof',
-                    
-                                      child: Image.asset(Assets.logoKharoof,
-                        height: 200, fit: BoxFit.cover),
-                  ),
-                ),
-                buildPhoneTF(),
-                buildName(),
-                buildPasswordTF(),
-                buildPasswordTFRE(),
-                // buildEmail(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: Align(
+                alignment: Alignment(0, -0.65),
+                child: ListView(
+                  shrinkWrap: true,
                   children: <Widget>[
+                    Align(
+                      child: Hero(
+                        tag: '5aroof',
+                        child: Image.asset(Assets.logoKharoof,
+                            height: 200, fit: BoxFit.cover),
+                      ),
+                    ),
                     Txt(
-                      'الشروط والاحكام',
-                      style: TxtStyle()..textColor(ColorsD.main),
-                      gesture: Gestures()..onTap(()=>Router.navigator.pushNamed(
+                      'ذبائح الشمال',
+                      style: TxtStyle()
+                        ..fontWeight(FontWeight.w600)
+                        ..textShadow(blur: 10)
+                        ..fontSize(32)..alignment.center()
+                    ),
+                    buildPhoneTF(),
+                    buildName(),
+                    buildPasswordTF(),
+                    buildPasswordTFRE(),
+                    // buildEmail(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Txt(
+                          'الشروط والاحكام',
+                          style: TxtStyle()..textColor(ColorsD.main),
+                          gesture: Gestures()
+                            ..onTap(() => Router.navigator.pushNamed(
                                 Router.howShopping,
                                 arguments: HowShoppingArguments(
                                     jsonKey: 'conditions',
                                     title: 'الشروط و الأحكام'))),
+                        ),
+                        Txt('بانشائك هذا الحساب فانت توافق علي '),
+                      ],
                     ),
-                    Txt('بانشائك هذا الحساب فانت توافق علي '),
+                    registerBtn()
                   ],
                 ),
-                registerBtn()
-              ],
+              ),
             ),
-          ),
+            Parent(
+              child: Icon(Icons.arrow_back),
+              gesture: Gestures()
+                ..onTap(() => [Navigator.pop(context), print('s')]),
+              style: ParentStyle()..margin(all: 12),
+            )
+          ],
         ),
       ),
     );

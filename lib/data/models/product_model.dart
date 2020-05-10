@@ -28,6 +28,7 @@ class Products {
   int shudderId;
   int orderService;
   int power;
+  int place;
   String notes;
   String arrivalTime;
   String resturant;
@@ -41,6 +42,7 @@ class Products {
       this.power,
       this.notes,
       this.arrivalTime,
+      this.place,
       this.resturant});
 
   Products.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class Products {
     shudderId = json['shudder_id'];
     orderService = json['order_service'];
     power = json['power'];
+    place = json['place'];
     notes = json['notes'];
     arrivalTime = json['arrival_time'];
     resturant = json['resturant'];
@@ -59,6 +62,7 @@ class Products {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['product_id'] = this.productId;
     data['qty'] = this.qty;
+    data['place'] = this.place;
     data['package_id'] = this.packageId;
     data['shudder_id'] = this.shudderId;
     data['order_service'] = this.orderService;

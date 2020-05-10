@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>ذبائح الشمال</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,13 +17,39 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>1.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>12</string>
+	<key>LSApplicationCategoryType</key>
+	<string>Zabayeh needs this permission</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Zabayeh needs this permission</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Zabayeh needs this permission</string>
+	<key>NSCameraUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية الوصول للكاميرا لادراج صورة لايصال الدفع</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Zabayeh needs this permission</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Zabayeh needs this permission</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يحتاج التطبيق لصلاحية الوصول للصور لادراج صورة لايصال الدفع</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Zabayeh needs this permission</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -42,21 +70,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
-	<YES/>
-
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>يحتاج التطبيق لصلاحية الوصول للصور لادراج صورة لايصال الدفع</string>
-
-	<key>NSCameraUsageDescription</key>
-	<string>يحتاج التطبيق لصلاحية الوصول للكاميرا لادراج صورة لايصال الدفع</string>
-
-	<key>NSLocationAlwaysUsageDescription</key>
-    <string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان/string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
-    <key>io.flutter.embedded_views_preview</key>
-    <true/>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    	<string>يحتاج التطبيق لصلاحية GPS لتحديد العنوان</string>
+	<true/>
 </dict>
 </plist>

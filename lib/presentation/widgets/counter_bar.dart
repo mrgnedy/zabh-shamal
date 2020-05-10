@@ -27,14 +27,15 @@ class _CounterBarState extends State<CounterBar> {
     return Container(
       child: Row(
         children: <Widget>[
-          GestureDetector(
+          InkWell(
             onTap: () {
               if (counter > 1) counter--;
               {
+                print('j');
                 // widget.callback(counter, widget.index);
                 reactiveModel.setState(
                     (state) => state.cartCounters[widget.index] = counter);
-                if (mounted) setState(() {});
+                // if (mounted) setState(() {});
               }
             },
             child: Icon(
@@ -48,7 +49,7 @@ class _CounterBarState extends State<CounterBar> {
               ..textColor(ColorsD.main)
               ..padding(horizontal: 10),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
               counter++;
               // widget.callback(counter, widget.index);

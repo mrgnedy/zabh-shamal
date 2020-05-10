@@ -1,7 +1,9 @@
+import 'package:bots/core/api_utils.dart';
 import 'package:bots/core/utils.dart';
 import 'package:bots/presentation/state/account_store.dart';
 import 'package:bots/presentation/widgets/idle_widget.dart';
 import 'package:bots/presentation/widgets/waiting_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -36,16 +38,20 @@ class _HowShoppingState extends State<HowShopping> {
   }
 
   Widget onDataWidget(String content) {
+    final size = MediaQuery.of(context).size;
     return Center(
-      child: ListView(shrinkWrap: true, children: [
-        Txt(
-          content,
-          style: StylesD.txtStyle.clone()
-            ..alignment.center()
-            ..fontSize(20)
-            ..margin(all: 10),
+      child: Container(width : size.width, height: size.height, child:
+        CachedNetworkImage(
+          imageUrl: '${APIs.imageBaseUrl}$content',
+          placeholder: (_,__)=> WaitingWidget(),
+          // style: StylesD.txtStyle.clone()
+          //   ..alignment.centerRight()
+          //   ..alignmentContent.centerRight()
+          //   ..textDirection(TextDirection.rtl)
+          //   ..fontSize(20)
+          //   ..margin(all: 10),
         ),
-      ]),
+      ),
     );
   }
 

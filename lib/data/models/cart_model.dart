@@ -34,6 +34,7 @@ class CartItemModel {
   int packageId;
   int shudderId;
   int orderService;
+  int place;
   String notes;
   String arrivalTime;
   String resturant;
@@ -52,6 +53,7 @@ class CartItemModel {
       this.shudderId,
       this.orderService,
       this.notes,
+      this.place,
       this.arrivalTime,
       this.resturant,
       this.sername,
@@ -61,6 +63,7 @@ class CartItemModel {
 
   CartItemModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    place = json['place'];
     qty = json['qty'];
     power = json['power'];
     totalPrice = json['total_price'];
@@ -85,6 +88,7 @@ class CartItemModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['place'] = this.place;
     data['qty'] = this.qty;
     data['power'] = this.power;
     data['total_price'] = this.totalPrice;
@@ -111,6 +115,7 @@ class Product {
   String age;
   String weight;
   int type;
+  int place;
   String name;
   String desc;
   int serviceId;
@@ -126,6 +131,7 @@ class Product {
       this.weight,
       this.type,
       this.name,
+      this.place,
       this.desc,
       this.serviceId,
       this.price,
@@ -137,6 +143,7 @@ class Product {
     id = json['id'];
     image = json['image'];
     age = json['age'];
+    place = json['place'];
     weight = json['weight'];
     type = json['type'];
     name = json['name'];
@@ -155,6 +162,7 @@ class Product {
     data['age'] = this.age;
     data['weight'] = this.weight;
     data['type'] = this.type;
+    data['place'] = this.place;
     data['name'] = this.name;
     data['desc'] = this.desc;
     data['service_id'] = this.serviceId;

@@ -111,7 +111,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
   sendWhatever() {
     final reactiveModel = Injector.getAsReactive<AccountStore>();
     reactiveModel
-        .setState((state) => state.contactUs(context, name.text, message.text));
+        .setState((state) => state.contactUs(context, name.text, message.text).then((val){
+          if(val != null)
+          AlertDialogs.success(context, content:'نشكركم على تواصلكم معنا');
+        }));
   }
 
   Widget sendBtn() {
@@ -148,7 +151,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
   Widget buildWhats() {
     String whatsNumber =
-        "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}&text=${'السلام عليكم'}";
+        "https://api.whatsapp.com/send?phone=${reactiveModel.state.infoModel.data.whatsapp}";
     return GestureDetector(
       onTap: () => phoneCall(whatsNumber),
       child: Icon(

@@ -102,11 +102,21 @@ class _OrdersState extends State<OrdersPage>
   }
 
   Widget orderItem(Initorders order) {
-    String createdTime = DateTime.parse(order.order.first.createdAt).add(Duration(hours: 2)).toString();
+    String createdTime = DateTime.parse(order.order.first.createdAt)
+        .add(Duration(hours: 2))
+        .toString();
+    int hour = int.parse(createdTime.split(' ')[1].split('.')[0].split(':')[0]);
+    int minute =
+        int.parse(createdTime.split(' ')[1].split('.')[0].split(':')[1]);
+    int finalHour = hour > 12 ? hour - 12 : hour;
+    String typePeriod = hour > 12 ? 'PM' : 'AM';
+    String time = toArabic(('$finalHour:$minute $typePeriod'));
+    print(time);
     return Parent(
-      gesture: Gestures() 
+      gesture: Gestures()
         ..onTap(() => Router.navigator.pushNamed(Router.orderProductcsPage,
-            arguments: OrderProductcsPageArguments(title: 'تفاصيل الطلب',products: order.orderProducts) )),
+            arguments: OrderProductcsPageArguments(
+                title: 'تفاصيل الطلب', products: order.orderProducts))),
       style: StylesD.cartStyle,
       child: Stack(
         // fit: StackFit.expand,
@@ -156,9 +166,9 @@ class _OrdersState extends State<OrdersPage>
                             TextStyle(color: ColorsD.main, fontFamily: 'Cairo'),
                       ),
                       TextSpan(
-                        text: '${createdTime.split(' ')[1].split('.')[0]}  ${createdTime.split(' ')[0]}',
-                        style:
-                            TextStyle(color: Colors.black, fontFamily: 'Cairo'),
+                        text:
+                            '${toArabic(createdTime.split(' ')[0].split('.')[0])}  $time',
+                        style: TextStyle(color: Colors.black),
                       ),
                     ],
                   ),
@@ -172,4 +182,21 @@ class _OrdersState extends State<OrdersPage>
       ),
     );
   }
+  String toArabic(String s) {
+    return s
+        .replaceAll('1', '١')
+        .replaceAll('2', '٢')
+        .replaceAll('3', '٣')
+        .replaceAll('4', '٤')
+        .replaceAll('5', '٥')
+        .replaceAll('6', '٦')
+        .replaceAll('7', '٧')
+        .replaceAll('8', '٨')
+        .replaceAll('9', '٩')
+        .replaceAll('0', '٠')
+        .replaceAll('-', '/')
+        .replaceAll('PM', 'م')
+        .replaceAll('AM', 'ص');
+  }
 }
+

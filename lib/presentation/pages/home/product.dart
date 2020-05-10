@@ -3,6 +3,8 @@ import 'package:bots/core/utils.dart';
 import 'package:bots/data/models/all_services.dart';
 import 'package:bots/data/models/pack_shred_model.dart';
 import 'package:bots/data/models/product_model.dart';
+import 'package:bots/presentation/pages/cart/cart.dart';
+import 'package:bots/presentation/pages/mainPage.dart';
 import 'package:bots/presentation/router.gr.dart';
 import 'package:bots/presentation/state/cart_store.dart';
 import 'package:bots/presentation/state/services_store.dart';
@@ -42,17 +44,14 @@ class _ProductPageState extends State<ProductPage>
     packages = subPackages = List.from(reactiveModel.state.packages);
     subPackages =
         packages.where((pack) => pack.type == 1 - tabController.index).toList();
-    // print(packages);
     services = subServices = List.from(reactiveModel.state.shreds);
     subServices =
         services.where((serv) => serv.type == 1 - tabController.index).toList();
     servicess = reactiveModel.state.services
         .singleWhere((serv) => serv.id == widget.product.serviceId)
         .name;
-    dropDownValues = {
-      'التقطيع': subServices.first.name,
-      'التجهيز': subPackages.first.name,
-    };
+    print('printtt $services');
+    dropDownValues = {};
     print(services);
     super.initState();
   }
@@ -113,8 +112,7 @@ class _ProductPageState extends State<ProductPage>
                         Txt('الذهاب الي العربة',
                             style: TxtStyle()..textColor(Colors.white),
                             gesture: Gestures()
-                              ..onTap(() =>
-                                  Router.navigator.pushNamed(Router.cart))),
+                              ..onTap(() => Router.navigator.push(cartPage()))),
                         SizedBox(
                           width: 10,
                         ),
@@ -133,7 +131,26 @@ class _ProductPageState extends State<ProductPage>
     );
   }
 
+  cartPage() {
+    return MaterialPageRoute(
+        builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text('العربة'),
+                centerTitle: true,
+              ),
+              body: Cart(),
+            ));
+  }
+
   addToCart(ProductModel product) {
+    // if (dropDownValues['التقطيع'] == null) {
+    //   AlertDialogs.failed(context, content: 'من فضلك اختر طريقة التقطيع');
+    //   return;
+    // }
+    // if (dropDownValues['التجهيز'] == null) {
+    //   AlertDialogs.failed(context, content: 'من فضلك اختر طريقة التجهيز');
+    //   return;
+    // }
     if (APIs.token == null) {
       AlertDialogs.failed(context, content: 'من فضلك سجل الدخول').then((val) {
         if (val != true) Router.navigator.pushNamed(Router.authPage);
@@ -142,6 +159,7 @@ class _ProductPageState extends State<ProductPage>
       return;
     }
     print('Adding to cart..');
+    print('${restCtrler.text}');
     final reactiveModel = Injector.getAsReactive<CartStore>();
     reactiveModel
         .setState((state) => state.addToCart(context, product).then((data) {
@@ -166,31 +184,30 @@ class _ProductPageState extends State<ProductPage>
     subPackages.addAll(packages
         .where((serv) => serv.type == 1 - tabController.index)
         .toList());
-    dropDownValues = {
-      'التقطيع': subServices.first.name,
-      'التجهيز': subPackages.first.name,
-    };
+    dropDownValues = {};
     setState(() {});
   }
 
   Widget addToCartBtn() {
+    print('${tabController.index}');
     ProductModel productModel = ProductModel()
       ..products = [
         Products()
+          ..place = 1 - tabController.index
           ..arrivalTime = '${arrivalTime.text}'
           ..notes = '${notesCtrler.text}'
           ..orderService = widget.product.serviceId
           ..productId = widget.product.id
-          ..power = shaloota.boolToInt()
+          ..power = shaloota? 1: 0
           ..packageId = packages
-              .singleWhere((pack) => pack.name == dropDownValues['التجهيز'],
-                  orElse: () => packages.first)
+              .firstWhere((pack) => pack.name == dropDownValues['التجهيز'],
+                  orElse: () => packages?.first)
               .id
           ..qty = counter
           ..resturant = '${restCtrler.text}'
           ..shudderId = services
-              .singleWhere((serv) => serv.name == dropDownValues['التقطيع'],
-                  orElse: () => packages.first)
+              .firstWhere((serv) => serv.name == dropDownValues['التقطيع'],
+                  orElse: () => services?.first)
               .id
       ];
     Widget onIdleWidget = Parent(
@@ -343,6 +360,9 @@ class _ProductPageState extends State<ProductPage>
             Expanded(
               child: Container(
                   child: TextField(
+                onChanged: (s) {
+                  setState(() {});
+                },
                 textAlign: TextAlign.right,
                 controller: notesCtrler,
                 maxLines: 3,
@@ -376,6 +396,7 @@ class _ProductPageState extends State<ProductPage>
               Expanded(
                 child: Container(
                     child: TextField(
+                  onChanged: (s) => setState(() {}),
                   textAlign: TextAlign.right,
                   controller: restCtrler,
                 )),
@@ -407,10 +428,17 @@ class _ProductPageState extends State<ProductPage>
               children: <Widget>[
                 GestureDetector(
                   child: Icon(Icons.access_time, color: ColorsD.main),
-                  onTap: () async => arrivalTime.text = (await showTimePicker(
+                  onTap: () async {
+                    
+                    TimeOfDay time  = (await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay(hour: 10, minute: 0)))
-                      .format(context),
+                      ;
+                      // int hour = time.period == DayPeriod.pm? time.hour+12 : time.hour;
+                      // int minute = time.minute;
+                      // print(hour);
+                      arrivalTime.text = '${time.hour}:${time.minute}';
+                      }
                 ),
                 SizedBox(
                   width: 10,
@@ -514,7 +542,7 @@ class _ProductPageState extends State<ProductPage>
                       alignment: Alignment.lerp(
                           Alignment.centerRight, Alignment.centerLeft, 0.35),
                       child: Txt(
-                        list.first.name,
+                        'اختر طريقة $key',
                         style: StylesD.txtStyle.clone()
                           ..textColor(ColorsD.main),
                       ),
@@ -555,13 +583,14 @@ class _ProductPageState extends State<ProductPage>
                 child: PhotoView(
                   backgroundDecoration:
                       BoxDecoration(color: Colors.transparent),
-                  customSize:
-                      Size.fromHeight(MediaQuery.of(context).size.height / 2),
+                  // customSize:
+                  //     Size.fromHeight(MediaQuery.of(context).size.height / 2),
                   heroAttributes: PhotoViewHeroAttributes(
                     tag: 'widget.tag',
                   ),
                   imageProvider: NetworkImage(
-                      '${APIs.imageBaseUrl}${widget.product.image}'),
+                    '${APIs.imageBaseUrl}${widget.product.image}',
+                  ),
                 ),
               ),
             ),
@@ -619,8 +648,8 @@ class _ProductPageState extends State<ProductPage>
   }
 }
 
-extension BoolParser on bool {
-  int boolToInt() {
-    return this ? 1 : 0;
-  }
-}
+// extension BoolParser on bool {
+//   int boolToInt() {
+//     return this ? 1 : 0;
+//   }
+// }

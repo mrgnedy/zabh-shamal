@@ -66,8 +66,9 @@ class _CartState extends State<Cart> {
 
                           children:
                               List.generate(s.cartModel.data.length, (index) {
+                                print(s.cartModel.data[index].packageId);
                             return CartItem(s.cartModel.data[index], index);
-                          })..reversed
+                          })
                                 ..addAll(
                                   [
                                     buildTotalPrice(totalPrice),

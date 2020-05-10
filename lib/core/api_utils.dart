@@ -90,6 +90,8 @@ class APIs {
                   'تعذر الإتصال');
       }
     } else
-      AlertDialogs.failed(context, content: 'تعذر الإتصال');
+      {
+        print(response.reasonPhrase);
+        AlertDialogs.failed(context, content: 'تعذر الإتصال');}
   }
 }
